@@ -13,10 +13,18 @@ require("lazy").setup({
   },
   { import = "community" },
   { import = "plugins" },
+  {
+    "CRAG666/code_runner.nvim",
+    config = function()
+      require("code_runner").setup {
+        focus = false,
+      }
+    end,
+  },
 } --[[@as LazySpec]], {
   -- Configure any other `lazy.nvim` configuration options here
   install = { colorscheme = { "astrodark", "habamax" } },
-  ui = { backdrop = 100 },
+  ui = { backdrop = 70 },
   performance = {
     rtp = {
       -- disable some rtp plugins, add more to your liking

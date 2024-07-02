@@ -10,6 +10,7 @@ return {
           -- mappings seen under group name "Buffer"
           ["<enter>"] = { ":silent .w !xargs -0r tmux send -t 1 -l <cr>", desc = "Tmux sends command to pane 1" },
           ["<leader>s"] = { "/<C-r>*<CR>", desc = "Search the contents of register *" },
+          ["<leader>r"] = { ":RunCode<CR>", desc = "code-runner.nvim - RunCode" },
           ["L"] = { "$" },
           ["H"] = { "^" },
           ["<Leader>bD"] = {
