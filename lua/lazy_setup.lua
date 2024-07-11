@@ -21,6 +21,59 @@ require("lazy").setup({
       }
     end,
   },
+  -- NOTE: Falsh
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    ---@type Flash.Config
+    opts = {
+      jump = {
+        autojump = true,
+      },
+      label = {
+        uppercase = true,
+        before = true,
+        after = false,
+        rainbow = {
+          enabled = true,
+          -- number between 1 and 9
+          shade = 9,
+        },
+      },
+      modes = {
+        char = {
+          keys = { "f", "F", "t", "T" },
+          jump_labels = true,
+          jump = {
+            autojump = true,
+          },
+        },
+        treesitter = {
+          jump = { pos = "range", autojump = true },
+          label = { style = "overlay" },
+        },
+      },
+    },
+    keys = {
+      -- NOTE: mode:
+      -- c : 搜索模式, [/,?] 触发
+      { "<leader><leader>w", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      {
+        "<leader><leader>W",
+        mode = { "n", "x", "o" },
+        function() require("flash").treesitter() end,
+        desc = "Flash Treesitter",
+      },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      {
+        "R",
+        mode = { "o", "x" },
+        function() require("flash").treesitter_search() end,
+        desc = "Treesitter Search",
+      },
+      { "<leader><leader>w", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    },
+  },
 } --[[@as LazySpec]], {
   -- Configure any other `lazy.nvim` configuration options here
   install = { colorscheme = { "astrodark", "habamax" } },

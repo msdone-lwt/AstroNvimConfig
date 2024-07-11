@@ -1,3 +1,12 @@
+-- NOTE: mode
+-- Normal 模式 (n): 正常模式，通常是你在编辑器中进行大部分操作的模式。
+-- Visual 模式 (v): 可视模式，用于选择文本块。
+-- Visual 模式 (x): 这里的 x 是 v 的一种变体，表示可视模式的字符选择。
+-- Select 模式 (s): 选择模式，类似于可视模式，但用于替换选择的文本。
+-- Operator-pending 模式 (o): 操作符等待模式，用于等待下一个操作符命令。
+-- Insert 模式 (i): 插入模式，用于插入文本。
+-- Command-line 模式 (c): 命令行模式，用于输入命令。
+-- Terminal 模式 (t): 终端模式，用于在嵌入的终端中操作。
 return {
   {
     "AstroNvim/astrocore",
@@ -11,6 +20,8 @@ return {
           ["<enter>"] = { ":silent .w !xargs -0r tmux send -t 1 -l <cr>", desc = "Tmux sends command to pane 1" },
           ["<leader>s"] = { "/<C-r>*<CR>", desc = "Search the contents of register *" },
           ["<leader>r"] = { ":RunCode<CR>", desc = "code-runner.nvim - RunCode" },
+          ["<leader>L"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
+          ["<leader>H"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
           ["L"] = { "$" },
           ["H"] = { "^" },
           ["<Leader>bD"] = {
