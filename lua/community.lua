@@ -13,5 +13,6 @@ return {
   { import = "astrocommunity.pack.markdown" },
   { import = "astrocommunity.markdown-and-latex.glow-nvim" },
   { import = "astrocommunity.split-and-window.windows-nvim" },
+  { import = "astrocommunity.motion.flash-nvim" },
   -- import/override with your plugins folder
 }
