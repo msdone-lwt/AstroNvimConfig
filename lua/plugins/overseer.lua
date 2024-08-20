@@ -10,7 +10,15 @@ return {
     local overseer = require "overseer"
     overseer.setup {
       dap = false,
-      templates = { "builtin", "make", "cargo", "shell", "custom.run_script", "custom.hdc_file_send" },
+      templates = {
+        "builtin",
+        "make",
+        "cargo",
+        "shell",
+        "custom.run_script",
+        "custom.hdc_file_send",
+        "custom.hdc_file_send_folder",
+      },
       task_list = {
         direction = "bottom",
         bindings = {
