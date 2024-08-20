@@ -67,6 +67,11 @@ require("lazy").setup({
   --     }
   --   end,
   -- },
+  -- NOTE: overseer
+  -- {
+  --   "stevearc/overseer.nvim",
+  --   opts = {},
+  -- },
 } --[[@as LazySpec]], {
   -- Configure any other `lazy.nvim` configuration options here
   install = { colorscheme = { "astrodark", "habamax" } },

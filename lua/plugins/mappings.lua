@@ -212,7 +212,6 @@ return {
           -- mappings seen under group name "Buffer"
           ["<enter>"] = { ":silent .w !xargs -0r tmux send -t 1 -l <cr>", desc = "Tmux sends command to pane 1" },
           ["<leader>s"] = { "/<C-r>*<CR>", desc = "Search the contents of register *" },
-          ["<leader>r"] = { ":RunCode<CR>", desc = "code-runner.nvim - RunCode" },
           ["<leader>L"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
           ["<leader>H"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
           ["L"] = { "$" },
@@ -228,11 +227,17 @@ return {
           -- tables with the `name` key will be registered with which-key if it's installed
           -- this is useful for naming menus
           ["<Leader>b"] = { name = "Buffers" },
-          ["<Leader><Leader>"] = { name = "Flash" },
+          -- NOTE: Flash
+          ["<Leader><Leader>"] = { name = " Flash" },
           -- quick save
           -- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command         -- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command
           ["<leader><leader>w"] = { function() require("flash").jump {} end, desc = "Flash" },
           ["<leader><leader>W"] = { function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+          -- NOTE: Overseer
+          -- ["<leader>r"] = { ":RunCode<CR>", desc = "code-runner.nvim - RunCode" },
+          ["<leader>r"] = { "<cmd>Overseer<CR>", desc = " Overseer" },
+          ["<leader>rr"] = { "<cmd>OverseerRun<CR>", desc = "List overseer run templates" },
+          ["<leader>rt"] = { "<cmd>OverseerToggle<CR>", desc = "Toggle overseer task list" },
         },
         i = {
           ["<C-h>"] = { "<Cmd>wincmd h<CR>", desc = "Move to left split" },
@@ -242,11 +247,13 @@ return {
           ["<C-v>"] = { "<C-[>pa", desc = "paste" },
         },
         x = {
+          ["<Leader><Leader>"] = { name = " Flash" },
           ["<leader><leader>w"] = { function() require("flash").jump() end, desc = "Flash" },
           ["<leader><leader>W"] = { function() require("flash").treesitter() end, desc = "Flash Treesitter" },
           ["R"] = { function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
         },
         o = {
+          ["<Leader><Leader>"] = { name = " Flash" },
           ["<leader><leader>w"] = { function() require("flash").jump() end, desc = "Flash" },
           ["<leader><leader>W"] = { function() require("flash").treesitter() end, desc = "Flash Treesitter" },
           ["r"] = { function() require("flash").remote() end, desc = "Remote Flash" },
