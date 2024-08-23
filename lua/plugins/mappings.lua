@@ -210,7 +210,10 @@ return {
         n = {
           -- second key is the lefthand side of the map
           -- mappings seen under group name "Buffer"
-          ["<enter>"] = { ":silent .w !xargs -0r tmux send -t 1 -l <cr>", desc = "Tmux sends command to pane 1" },
+          ["<leader><enter>"] = {
+            ":silent .w !xargs -0r tmux send -t 1 -l <cr>",
+            desc = "Tmux sends command to pane 1",
+          },
           ["<leader>s"] = { "/<C-r>*<CR>", desc = "Search the contents of register *" },
           ["<leader>L"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
           ["<leader>H"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
