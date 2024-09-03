@@ -84,8 +84,72 @@ return {
   -- },
   {
     "goolord/alpha-nvim",
+    dependencies = {
+      {
+        "nvim-tree/nvim-web-devicons",
+        {
+          "juansalvatore/git-dashboard-nvim",
+          dependencies = { "nvim-lua/plenary.nvim" },
+        },
+      },
+    },
     config = function()
       local dashboard = require "alpha.themes.dashboard"
+
+      local function pad(n) return { type = "padding", val = n } end
+
+      local function whitespace_only(str) return str:match "^%s*$" ~= nil end
+
+      local function format_git_header()
+        local git_dashboard_raw = require("git-dashboard-nvim").setup {}
+        local git_dashboard = {}
+        for _, line in ipairs(git_dashboard_raw) do
+          if not whitespace_only(line) then table.insert(git_dashboard, line) end
+        end
+
+        local git_repo = git_dashboard[1]
+        local git_branch = git_dashboard[#git_dashboard]
+        -- for i = 2, #git_dashboard - 1 do
+        --   local line = git_dashboard[i]
+        --   commit_data = commit_data .. "\n" .. string.rep(" ", 3) .. line
+        -- end
+
+        if git_repo == nil and git_branch == nil then
+          return {
+            type = "text",
+            val = " No git repository",
+            opts = { position = "center", hl = "String" },
+          }, {
+            type = "text",
+            val = " ",
+            opts = { hl = "Constant", position = "center" },
+          }
+        end
+
+        local git_branch_section = {
+          type = "text",
+          val = " " .. git_repo .. ":" .. string.sub(git_branch, 5, #git_branch),
+          opts = { position = "center", hl = "GitSignsChange" },
+        }
+
+        local commit_history = {
+          type = "group",
+          val = {},
+        }
+
+        local commit_table = { unpack(git_dashboard, 2, #git_dashboard - 1) }
+        for _, line in ipairs(commit_table) do
+          table.insert(commit_history.val, {
+            type = "text",
+            val = string.rep(" ", 3) .. line,
+            opts = { hl = "Comment", position = "center" },
+          })
+        end
+
+        return git_branch_section, commit_history
+      end
+
+      local git_branch_section, commit_history = format_git_header()
 
       -- helper function for utf8 chars
       local function getCharLen(s, pos)
@@ -96,6 +160,16 @@ return {
 
       local function applyColors(logo, colors, logoColors)
         dashboard.section.header.val = logo
+        dashboard.section.header.opts.position = "center"
+        local stats = require("lazy").stats()
+        local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+        dashboard.section.footer.val = "🚀 Neovim loaded "
+          .. stats.loaded
+          .. "/"
+          .. stats.count
+          .. " plugins in "
+          .. ms
+          .. "ms"
 
         for key, color in pairs(colors) do
           local name = "Alpha" .. key
@@ -121,47 +195,61 @@ return {
         return dashboard.opts
       end
 
-      require("alpha").setup(applyColors({
-        [[  ███       ███  ]],
-        [[  ████      ████ ]],
-        [[  ████     █████ ]],
-        [[ █ ████    █████ ]],
-        [[ ██ ████   █████ ]],
-        [[ ███ ████  █████ ]],
-        [[ ████ ████ ████ ]],
-        [[ █████  ████████ ]],
-        [[ █████   ███████ ]],
-        [[ █████    ██████ ]],
-        [[ █████     █████ ]],
-        [[ ████      ████ ]],
-        [[  ███       ███  ]],
-        [[                    ]],
-        [[  N  E  O  V  I  M  ]],
-      }, {
-        ["b"] = { fg = "#3399ff", ctermfg = 33 },
-        ["a"] = { fg = "#53C670", ctermfg = 35 },
-        ["g"] = { fg = "#39ac56", ctermfg = 29 },
-        ["h"] = { fg = "#33994d", ctermfg = 23 },
-        ["i"] = { fg = "#33994d", bg = "#39ac56", ctermfg = 23, ctermbg = 29 },
-        ["j"] = { fg = "#53C670", bg = "#33994d", ctermfg = 35, ctermbg = 23 },
-        ["k"] = { fg = "#30A572", ctermfg = 36 },
-      }, {
-        [[  kkkka       gggg  ]],
-        [[  kkkkaa      ggggg ]],
-        [[ b kkkaaa     ggggg ]],
-        [[ bb kkaaaa    ggggg ]],
-        [[ bbb kaaaaa   ggggg ]],
-        [[ bbbb aaaaaa  ggggg ]],
-        [[ bbbbb aaaaaa igggg ]],
-        [[ bbbbb  aaaaaahiggg ]],
-        [[ bbbbb   aaaaajhigg ]],
-        [[ bbbbb    aaaaajhig ]],
-        [[ bbbbb     aaaaajhi ]],
-        [[ bbbbb      aaaaajh ]],
-        [[  bbbb       aaaaa  ]],
-        [[                    ]],
-        [[  a  a  a  b  b  b  ]],
-      }))
+      require("alpha").setup {
+        applyColors({
+          [[  ███       ███  ]],
+          [[  ████      ████ ]],
+          [[  ████     █████ ]],
+          [[ █ ████    █████ ]],
+          [[ ██ ████   █████ ]],
+          [[ ███ ████  █████ ]],
+          [[ ████ ████ ████ ]],
+          [[ █████  ████████ ]],
+          [[ █████   ███████ ]],
+          [[ █████    ██████ ]],
+          [[ █████     █████ ]],
+          [[ ████      ████ ]],
+          [[  ███       ███  ]],
+          [[                    ]],
+          [[  N  E  O  V  I  M  ]],
+        }, {
+          ["b"] = { fg = "#3399ff", ctermfg = 33 },
+          ["a"] = { fg = "#53C670", ctermfg = 35 },
+          ["g"] = { fg = "#39ac56", ctermfg = 29 },
+          ["h"] = { fg = "#33994d", ctermfg = 23 },
+          ["i"] = { fg = "#33994d", bg = "#39ac56", ctermfg = 23, ctermbg = 29 },
+          ["j"] = { fg = "#53C670", bg = "#33994d", ctermfg = 35, ctermbg = 23 },
+          ["k"] = { fg = "#30A572", ctermfg = 36 },
+        }, {
+          [[  kkkka       gggg  ]],
+          [[  kkkkaa      ggggg ]],
+          [[ b kkkaaa     ggggg ]],
+          [[ bb kkaaaa    ggggg ]],
+          [[ bbb kaaaaa   ggggg ]],
+          [[ bbbb aaaaaa  ggggg ]],
+          [[ bbbbb aaaaaa igggg ]],
+          [[ bbbbb  aaaaaahiggg ]],
+          [[ bbbbb   aaaaajhigg ]],
+          [[ bbbbb    aaaaajhig ]],
+          [[ bbbbb     aaaaajhi ]],
+          [[ bbbbb      aaaaajh ]],
+          [[  bbbb       aaaaa  ]],
+          [[                    ]],
+          [[  a  b  g  k  h  a  ]],
+        }),
+        layout = {
+          pad(2),
+          dashboard.section.header,
+          pad(1),
+          commit_history,
+          pad(1),
+          git_branch_section,
+          pad(1),
+          dashboard.section.buttons,
+          pad(1),
+          dashboard.section.footer,
+        },
+      }
     end,
   },
 }
