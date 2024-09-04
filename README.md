@@ -32,3 +32,13 @@ git clone https://github.com/<your_user>/<your_repository> ~/.config/nvim
 ```shell
 nvim
 ```
+
+# Common Commands
+
+## Highlight
+
+- view all the currently active groups
+
+```shell
+:so $VIMRUNTIME/syntax/hitest.vim
+```

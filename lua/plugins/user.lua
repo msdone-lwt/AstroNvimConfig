@@ -95,10 +95,77 @@ return {
     },
     config = function()
       local dashboard = require "alpha.themes.dashboard"
+      local startify = require "alpha.themes.startify"
 
       local function pad(n) return { type = "padding", val = n } end
 
       local function whitespace_only(str) return str:match "^%s*$" ~= nil end
+
+      local function trim(str) return (string.gsub(str, "^%s*(.-)%s*$", "%1")) end
+      function table_to_string(tbl, indent)
+        indent = indent or 0
+        local toprint = string.rep(" ", indent) .. "{\n"
+        indent = indent + 2
+        for k, v in pairs(tbl) do
+          toprint = toprint .. string.rep(" ", indent)
+          if type(k) == "number" then
+            toprint = toprint .. "[" .. k .. "] = "
+          elseif type(k) == "string" then
+            toprint = toprint .. k .. " = "
+          end
+          if type(v) == "number" then
+            toprint = toprint .. v .. ",\n"
+          elseif type(v) == "string" then
+            toprint = toprint .. '"' .. v .. '",\n'
+          elseif type(v) == "table" then
+            toprint = toprint .. table_to_string(v, indent + 2) .. ",\n"
+          else
+            toprint = toprint .. '"' .. tostring(v) .. '",\n'
+          end
+        end
+        toprint = toprint .. string.rep(" ", indent - 2) .. "}"
+        return toprint
+      end
+
+      local function format_git_heatmap_item(str)
+        local hl_group = {}
+        local modified_str = ""
+        local index = 1
+
+        for char in str:gmatch "." do
+          if char:match "%d" then
+            local a = tonumber(char)
+
+            if a == 1 then
+              table.insert(hl_group, { "GitDashboardContributionLevel1", index - 1, index })
+            elseif a == 2 then
+              table.insert(hl_group, { "GitDashboardContributionLevel2", index - 1, index })
+            elseif a == 3 then
+              table.insert(hl_group, { "GitDashboardContributionLevel3", index - 1, index })
+            elseif a == 4 then
+              table.insert(hl_group, { "GitDashboardContributionLevel4", index - 1, index })
+            elseif a == 5 then
+              table.insert(hl_group, { "GitDashboardContributionLevel5", index - 1, index })
+            elseif a == 6 then
+              table.insert(hl_group, { "GitDashboardContributionLevel6", index - 1, index })
+            end
+
+            -- modified_str = modified_str .. "" -- FIXME:   转为 utf8 之后 其实是 \xef\x82\x96 的字符, 尝试解决
+            modified_str = modified_str .. "*"
+          elseif char:match "%a" then
+            table.insert(hl_group, { "String", index - 1, index })
+            modified_str = modified_str .. char
+          else
+            table.insert(hl_group, { "GitDashboardContributionLevel0", index - 1, index })
+            modified_str = modified_str .. char
+          end
+
+          index = index + 1
+        end
+
+        -- vim.notify_once(modified_str .. " ====》 hl_group" .. table_to_string(hl_group))
+        return modified_str, hl_group
+      end
 
       local function format_git_header()
         local git_dashboard_raw = require("git-dashboard-nvim").setup {}
@@ -138,12 +205,21 @@ return {
         }
 
         local commit_table = { unpack(git_dashboard, 2, #git_dashboard - 1) }
-        for _, line in ipairs(commit_table) do
-          table.insert(commit_history.val, {
-            type = "text",
-            val = string.rep(" ", 3) .. line,
-            opts = { hl = "Comment", position = "center" },
-          })
+        for index, line in ipairs(commit_table) do
+          if index == 1 then
+            table.insert(commit_history.val, {
+              type = "text",
+              val = line,
+              opts = { hl = "Constant", position = "center" },
+            })
+          else
+            local modified_line_str, hl_group = format_git_heatmap_item(line)
+            table.insert(commit_history.val, {
+              type = "text",
+              val = modified_line_str,
+              opts = { hl = hl_group, position = "center" },
+            })
+          end
         end
 
         return git_branch_section, commit_history
@@ -164,12 +240,12 @@ return {
         local stats = require("lazy").stats()
         local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
         dashboard.section.footer.val = "🚀 Neovim loaded "
-          .. stats.loaded
-          .. "/"
-          .. stats.count
-          .. " plugins in "
-          .. ms
-          .. "ms"
+            .. stats.loaded
+            .. "/"
+            .. stats.count
+            .. " plugins in "
+            .. ms
+            .. "ms"
 
         for key, color in pairs(colors) do
           local name = "Alpha" .. key
@@ -235,10 +311,10 @@ return {
           [[ bbbbb      aaaaajh ]],
           [[  bbbb       aaaaa  ]],
           [[                    ]],
-          [[  a  b  g  k  h  a  ]],
+          [[  a  a  a  b  b  b  ]],
         }),
         layout = {
-          pad(2),
+          pad(1),
           dashboard.section.header,
           pad(1),
           commit_history,
@@ -248,6 +324,11 @@ return {
           dashboard.section.buttons,
           pad(1),
           dashboard.section.footer,
+          pad(1),
+          startify.section.top_buttons,
+          startify.section.mru_cwd,
+          startify.section.mru,
+          startify.section.bottom_buttons,
         },
       }
     end,
