@@ -133,6 +133,7 @@ return {
         local index = 1
 
         for char in str:gmatch "." do
+          vim.notify(char)
           if char:match "%d" then
             local a = tonumber(char)
 
@@ -150,8 +151,8 @@ return {
               table.insert(hl_group, { "GitDashboardContributionLevel6", index - 1, index })
             end
 
-            -- modified_str = modified_str .. "" -- FIXME:   转为 utf8 之后 其实是 \xef\x82\x96 的字符, 尝试解决
-            modified_str = modified_str .. "*"
+            modified_str = modified_str .. "" -- FIXME:   转为 utf8 之后 其实是 \xef\x82\x96 的字符, 尝试解决
+            -- modified_str = modified_str .. "*"
           elseif char:match "%a" then
             table.insert(hl_group, { "String", index - 1, index })
             modified_str = modified_str .. char
