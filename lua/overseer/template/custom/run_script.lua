@@ -1,7 +1,7 @@
 return {
   name = "run_script",
   condition = {
-    filetype = { "sh", "python", "typescript", "javascript", "c", "cpp" },
+    filetype = { "sh", "python", "typescript", "javascript", "lua", "c", "cpp" },
   },
   builder = function()
     local cmd
@@ -20,6 +20,9 @@ return {
       args = { vim.fn.expand "%:p" }
     elseif filetype == "typescript" then
       cmd = "ts-node"
+      args = { vim.fn.expand "%:p" }
+    elseif filetype == "lua" then
+      cmd = "lua"
       args = { vim.fn.expand "%:p" }
     elseif filetype == "c" then
       local sourceCodeFile = vim.fn.expand "%:p"
