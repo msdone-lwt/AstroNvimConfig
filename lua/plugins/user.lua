@@ -97,6 +97,16 @@ return {
       local dashboard = require "alpha.themes.dashboard"
       local startify = require "alpha.themes.startify"
 
+      local stats = require("lazy").stats()
+      local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+      dashboard.section.footer.val = "🚀 Neovim loaded "
+        .. stats.loaded
+        .. "/"
+        .. stats.count
+        .. " plugins in "
+        .. ms
+        .. "ms"
+
       local function pad(n) return { type = "padding", val = n } end
 
       local function whitespace_only(str) return str:match "^%s*$" ~= nil end
@@ -133,7 +143,7 @@ return {
         local index = 1
 
         for char in str:gmatch "." do
-          vim.notify(char)
+          -- FIXME: 图标的 char 为<a0>、<c2> <9d>、<94>、<ef>
           if char:match "%d" then
             local a = tonumber(char)
 
@@ -151,7 +161,7 @@ return {
               table.insert(hl_group, { "GitDashboardContributionLevel6", index - 1, index })
             end
 
-            modified_str = modified_str .. "" -- FIXME:   转为 utf8 之后 其实是 \xef\x82\x96 的字符, 尝试解决
+            modified_str = modified_str .. ""
             -- modified_str = modified_str .. "*"
           elseif char:match "%a" then
             table.insert(hl_group, { "String", index - 1, index })
@@ -177,10 +187,6 @@ return {
 
         local git_repo = git_dashboard[1]
         local git_branch = git_dashboard[#git_dashboard]
-        -- for i = 2, #git_dashboard - 1 do
-        --   local line = git_dashboard[i]
-        --   commit_data = commit_data .. "\n" .. string.rep(" ", 3) .. line
-        -- end
 
         if git_repo == nil and git_branch == nil then
           return {
@@ -238,15 +244,6 @@ return {
       local function applyColors(logo, colors, logoColors)
         dashboard.section.header.val = logo
         dashboard.section.header.opts.position = "center"
-        local stats = require("lazy").stats()
-        local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-        dashboard.section.footer.val = "🚀 Neovim loaded "
-            .. stats.loaded
-            .. "/"
-            .. stats.count
-            .. " plugins in "
-            .. ms
-            .. "ms"
 
         for key, color in pairs(colors) do
           local name = "Alpha" .. key
