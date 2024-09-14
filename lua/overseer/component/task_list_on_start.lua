@@ -25,7 +25,7 @@ return {
       end,
       on_start = function(self, task)
         -- If we're currently in the task list, open a split in the nearest other window
-        window.open { direction = "bottom" }
+        window.open { direction = "bottom", enter = false } -- enter: Upon opening, whether to focus on the task list or not.
       end,
       on_reset = function(self, task)
         -- Called when the task is reset to run again

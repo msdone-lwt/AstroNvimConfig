@@ -11,9 +11,8 @@ return {
     config = function()
       require("git-dashboard-nvim").setup {
         -- filled_squares = { "", "", "", "", "", "" },
-        empty_square = "",
+        empty_square = "0",
         filled_squares = { "1", "2", "3", "4", "5", "6" },
-        -- empty_square = "",
       }
     end,
   },

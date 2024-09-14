@@ -3,6 +3,94 @@
 -- You can also add or configure plugins by creating files in this `plugins/` folder
 -- Here are some examples:
 
+-- NOTE: common function
+
+--[[
+ helper function for utf8 chars
+ * 获取字符串中指定位置的字符长度
+ * @param {string} s 字符串
+ * @param {number} pos 位置
+ * @returns {number} 字符长度
+ ]]
+local function getCharLen(s, pos)
+  local byte = string.byte(s, pos)
+  -- vim.notify_once(s .. ":" .. pos .. ":" .. byte)
+  if not byte then return nil end
+  return (byte < 0x80 and 1) or (byte < 0xE0 and 2) or (byte < 0xF0 and 3) or (byte < 0xF8 and 4) or 1
+end
+
+--[[
+  * 判断字符串是否为空
+  * @param {string} str 字符串
+  * @returns {boolean} 是否为空
+ ]]
+local function whitespace_only(str) return str:match "^%s*$" ~= nil end
+
+--[[
+  * 去除字符串两端的空白字符
+  * @param {string} str 字符串
+  * @returns {string} 去除两端空白字符后的字符串
+ ]]
+local function trim(str) return (string.gsub(str, "^%s*(.-)%s*$", "%1")) end
+
+--[[
+  * 将字符串写入到 Home 目录下的文件中
+  * @param {string} filename 文件名
+  * @param {string} content 内容
+ ]]
+local function write_to_file_in_home(filename, content)
+  -- 获取 Home 目录路径
+  local home = os.getenv "HOME" or os.getenv "USERPROFILE"
+  if not home then
+    vim.notify_once("Error: Cannot determine home directory", vim.log.levels.ERROR)
+    return
+  end
+
+  -- 构建完整的文件路径
+  local full_path = home .. "/" .. filename
+
+  -- 打开文件，使用 "w" 模式以写入内容
+  local file, err = io.open(full_path, "w")
+  if not file then
+    vim.notify_once("Error opening file: " .. err, vim.log.levels.ERROR)
+    return
+  end
+
+  -- 写入内容并关闭文件
+  file:write(content .. "\n")
+  file:close()
+end
+--[[
+  * 将 table 转换为字符串
+  * @param {table} tbl table
+  * @param {number} indent 缩进
+  * @returns {string} 转换后的字符串
+ ]]
+local function table_to_string(tbl, indent)
+  indent = indent or 0
+  local toprint = string.rep(" ", indent) .. "{\n"
+  indent = indent + 2
+  for k, v in pairs(tbl) do
+    toprint = toprint .. string.rep(" ", indent)
+    if type(k) == "number" then
+      toprint = toprint .. "[" .. k .. "] = "
+    elseif type(k) == "string" then
+      toprint = toprint .. k .. " = "
+    end
+    if type(v) == "number" then
+      toprint = toprint .. v .. ",\n"
+    elseif type(v) == "string" then
+      toprint = toprint .. '"' .. v .. '",\n'
+    elseif type(v) == "table" then
+      toprint = toprint .. table_to_string(v, indent + 2) .. ",\n"
+    else
+      toprint = toprint .. '"' .. tostring(v) .. '",\n'
+    end
+  end
+  toprint = toprint .. string.rep(" ", indent - 2) .. "}"
+  return toprint
+end
+
 ---@type LazySpec
 return {
   --
@@ -109,75 +197,79 @@ return {
 
       local function pad(n) return { type = "padding", val = n } end
 
-      local function whitespace_only(str) return str:match "^%s*$" ~= nil end
+      --[[
+        * 将字符串中的不可见字符替换为可见字符
+        * @param {string} str 字符串
+        * @returns {string} 替换后的字符串
+      ]]
+      local function replace_invisible_chars_in_table(tbl)
+        local replacements = {
+          ["\u{00A0}"] = " ", -- 不间断空格
+          ["\u{200B}"] = "", -- 零宽空格
+          -- 可以根据需要添加更多替换规则
+        }
 
-      local function trim(str) return (string.gsub(str, "^%s*(.-)%s*$", "%1")) end
-      function table_to_string(tbl, indent)
-        indent = indent or 0
-        local toprint = string.rep(" ", indent) .. "{\n"
-        indent = indent + 2
-        for k, v in pairs(tbl) do
-          toprint = toprint .. string.rep(" ", indent)
-          if type(k) == "number" then
-            toprint = toprint .. "[" .. k .. "] = "
-          elseif type(k) == "string" then
-            toprint = toprint .. k .. " = "
+        local function replace_invisible_chars(str)
+          for invisible_char, replacement in pairs(replacements) do
+            str = str:gsub(invisible_char, replacement)
           end
-          if type(v) == "number" then
-            toprint = toprint .. v .. ",\n"
-          elseif type(v) == "string" then
-            toprint = toprint .. '"' .. v .. '",\n'
-          elseif type(v) == "table" then
-            toprint = toprint .. table_to_string(v, indent + 2) .. ",\n"
-          else
-            toprint = toprint .. '"' .. tostring(v) .. '",\n'
-          end
+          return str
         end
-        toprint = toprint .. string.rep(" ", indent - 2) .. "}"
-        return toprint
+
+        for i, str in ipairs(tbl) do
+          tbl[i] = replace_invisible_chars(str)
+        end
+
+        return tbl
       end
 
-      local function format_git_heatmap_item(str)
+      -- 定义替换函数
+      local function replace_numbers(input_str)
+        -- 使用 gsub 函数进行替换
+        local replaced_str = input_str:gsub("%d", function(digit)
+          if digit == "0" then
+            -- return ""
+            return "󱓼"
+          else
+            -- return ""
+            return "󱓻"
+          end
+        end)
+        return { replaced_str }
+      end
+
+      -- 定义替换函数
+      local function replace_strings(input_str)
+        -- 使用 gsub 函数进行替换
+        local replaced_str = input_str:gsub("%a", "s")
+        return { replaced_str }
+      end
+
+      -- 定义格式化函数
+      local function format_git_heatmap_item(str, colors, strColors)
         local hl_group = {}
-        local modified_str = ""
-        local index = 1
-
-        for char in str:gmatch "." do
-          -- FIXME: 图标的 char 为<a0>、<c2> <9d>、<94>、<ef>
-          if char:match "%d" then
-            local a = tonumber(char)
-
-            if a == 1 then
-              table.insert(hl_group, { "GitDashboardContributionLevel1", index - 1, index })
-            elseif a == 2 then
-              table.insert(hl_group, { "GitDashboardContributionLevel2", index - 1, index })
-            elseif a == 3 then
-              table.insert(hl_group, { "GitDashboardContributionLevel3", index - 1, index })
-            elseif a == 4 then
-              table.insert(hl_group, { "GitDashboardContributionLevel4", index - 1, index })
-            elseif a == 5 then
-              table.insert(hl_group, { "GitDashboardContributionLevel5", index - 1, index })
-            elseif a == 6 then
-              table.insert(hl_group, { "GitDashboardContributionLevel6", index - 1, index })
-            end
-
-            modified_str = modified_str .. ""
-            -- modified_str = modified_str .. "*"
-          elseif char:match "%a" then
-            table.insert(hl_group, { "String", index - 1, index })
-            modified_str = modified_str .. char
-          else
-            table.insert(hl_group, { "GitDashboardContributionLevel0", index - 1, index })
-            modified_str = modified_str .. char
-          end
-
-          index = index + 1
+        for key, color in pairs(colors) do
+          local name = "GitDashboardHightLight" .. key
+          vim.api.nvim_set_hl(0, name, color)
+          colors[key] = name
         end
 
-        -- vim.notify_once(modified_str .. " ====》 hl_group" .. table_to_string(hl_group))
-        return modified_str, hl_group
+        for i, line in ipairs(strColors) do
+          local pos = 0
+
+          for j = 1, #line do
+            local opos = pos
+            pos = pos + getCharLen(str[i], opos + 1)
+
+            local color_name = colors[line:sub(j, j)]
+            if color_name then table.insert(hl_group, { color_name, opos, pos }) end
+          end
+        end
+
+        return str[1], hl_group
       end
 
+      -- 定义格式化函数
       local function format_git_header()
         local git_dashboard_raw = require("git-dashboard-nvim").setup {}
         local git_dashboard = {}
@@ -220,7 +312,18 @@ return {
               opts = { hl = "Constant", position = "center" },
             })
           else
-            local modified_line_str, hl_group = format_git_heatmap_item(line)
+            local modified_line_str, hl_group =
+              format_git_heatmap_item(replace_invisible_chars_in_table(replace_numbers(line)), {
+                ["0"] = { fg = "#696c76", ctermfg = 255 }, -- 白色
+                ["1"] = { fg = "#c6e48b", ctermfg = 187 }, -- 浅绿色
+                ["2"] = { fg = "#7bc96f", ctermfg = 114 }, -- 绿色
+                ["3"] = { fg = "#239a3b", ctermfg = 28 }, -- 深绿色
+                ["4"] = { fg = "#196127", ctermfg = 22 }, -- 更深绿
+                ["5"] = { fg = "#0e4429", ctermfg = 23 }, -- 暗绿色
+                ["6"] = { fg = "#003f00", ctermfg = 22 }, -- 深绿色
+                ["s"] = { fg = "#11DDDD" }, -- 星期颜色
+              }, replace_invisible_chars_in_table(replace_strings(line)))
+            -- vim.notify_once("modified_line_str:" .. modified_line_str .. ", hl_group: " .. table_to_string(hl_group))
             table.insert(commit_history.val, {
               type = "text",
               val = modified_line_str,
@@ -234,12 +337,10 @@ return {
 
       local git_branch_section, commit_history = format_git_header()
 
-      -- helper function for utf8 chars
-      local function getCharLen(s, pos)
-        local byte = string.byte(s, pos)
-        if not byte then return nil end
-        return (byte < 0x80 and 1) or (byte < 0xE0 and 2) or (byte < 0xF0 and 3) or (byte < 0xF8 and 4) or 1
-      end
+      -- write_to_file_in_home(
+      --   "nvimLog.txt",
+      --   "branch: " .. table_to_string(git_branch_section) .. ",commit_history: " .. table_to_string(commit_history)
+      -- )
 
       local function applyColors(logo, colors, logoColors)
         dashboard.section.header.val = logo
