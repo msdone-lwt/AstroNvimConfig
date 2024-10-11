@@ -7,12 +7,19 @@
 return {
   "gen740/SmoothCursor.nvim",
   config = function()
+    -- vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+    --   callback = function()
+    --     vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#baf16a" })
+    --     vim.fn.sign_define("smoothcursor", { text = "X" })
+    --     vim.cmd "redraw"
+    --   end,
+    -- })
     vim.api.nvim_create_autocmd({ "ModeChanged" }, {
       callback = function()
         local current_mode = vim.fn.mode()
         if current_mode == "n" then
-          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#8aa872" })
-          vim.fn.sign_define("smoothcursor", { text = "" })
+          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#50A4E9" })
+          vim.fn.sign_define("smoothcursor", { text = "" })
         elseif current_mode == "v" then
           vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#bf616a" })
           vim.fn.sign_define("smoothcursor", { text = "" })
@@ -25,6 +32,10 @@ return {
         elseif current_mode == "i" then
           vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#668aab" })
           vim.fn.sign_define("smoothcursor", { text = "" })
+        elseif current_mode == "c" then
+          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#baf16a" })
+          vim.fn.sign_define("smoothcursor", { text = "󰘳" })
+          vim.cmd "redraw"
         end
       end,
     })
@@ -74,8 +85,8 @@ return {
         head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil }, -- false to disable fancy head
         -- head = { cursor = "▷", texthl = "SmoothCursor", linehl = "CursorLine" }, -- false to disable fancy head
         -- NOTE:
-        -- CursorLine: nvim 默认的光标所在行的 hl, 和 nil 的区别是切换窗口时(c-h\j\k\l)会有渐变动画，会把 NOTE、FIXME 的高亮取消掉(光标在 NOTE、FIXME上)
-        -- nil: 使用nvim默认的 CursorLine，区别是切换窗口时(c-h\j\k\l)*没*有渐变动画
+        -- CursorLine: nvim 默认的光标所在行的 hl, 和 nil 的区别是切换窗口时 (c-h\j\k\l) 会有渐变动画，会把 NOTE、 FIXME 的高亮取消掉 ( 光标在 NOTE、 FIXME 上 )
+        -- nil: 使用 nvim 默认的 CursorLine，区别是切换窗口时 (c-h\j\k\l)* 没 * 有渐变动画
         -- SmoothCursorLinehl: 自定义 hl，参上
         body = {
           { cursor = "󰝥", texthl = "SmoothCursorRed" },
