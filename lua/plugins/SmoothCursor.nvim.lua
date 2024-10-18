@@ -7,38 +7,6 @@
 return {
   "gen740/SmoothCursor.nvim",
   config = function()
-    -- vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
-    --   callback = function()
-    --     vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#baf16a" })
-    --     vim.fn.sign_define("smoothcursor", { text = "X" })
-    --     vim.cmd "redraw"
-    --   end,
-    -- })
-    vim.api.nvim_create_autocmd({ "ModeChanged" }, {
-      callback = function()
-        local current_mode = vim.fn.mode()
-        if current_mode == "n" then
-          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#50A4E9" })
-          vim.fn.sign_define("smoothcursor", { text = "" })
-        elseif current_mode == "v" then
-          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#bf616a" })
-          vim.fn.sign_define("smoothcursor", { text = "" })
-        elseif current_mode == "V" then
-          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#bf616a" })
-          vim.fn.sign_define("smoothcursor", { text = "" })
-        elseif current_mode == "�" then
-          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#bf616a" })
-          vim.fn.sign_define("smoothcursor", { text = "" })
-        elseif current_mode == "i" then
-          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#668aab" })
-          vim.fn.sign_define("smoothcursor", { text = "" })
-        elseif current_mode == "c" then
-          vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#baf16a" })
-          vim.fn.sign_define("smoothcursor", { text = "󰘳" })
-          vim.cmd "redraw"
-        end
-      end,
-    })
     require("smoothcursor").setup {
       -- NOTE: common
       autostart = true, -- Automatically start SmoothCursor

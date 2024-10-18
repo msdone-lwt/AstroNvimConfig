@@ -22,4 +22,34 @@
 
 -- vim.cmd [[ highlight Cursor guifg=red guibg=yellow blend=100 ]]
 vim.g.have_nerd_font = true
-vim.g.copilot_workspace_folders = vim.fn.expand "%:p:h"
+
+-- vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+--   callback = function()
+--     vim.api.nvim_set_hl(0, "SmoothCursor", { fg = "#baf16a" })
+--     vim.fn.sign_define("smoothcursor", { text = "X" })
+--     vim.cmd "redraw"
+--   end,
+-- })
+
+-- NOTE: SmoothCursor.nvim
+vim.api.nvim_create_augroup("SmoothCursorConfig", { clear = true })
+
+vim.api.nvim_create_autocmd("ModeChanged", {
+  group = "SmoothCursorConfig",
+  callback = function()
+    local current_mode = vim.fn.mode()
+    local cursor_configs = {
+      n = { fg = "#50A4E9", text = "💥" },
+      v = { fg = "#bf616a", text = "" },
+      V = { fg = "#bf616a", text = "" },
+      i = { fg = "#668aab", text = "" },
+      c = { fg = "#baf16a", text = "󰘳" },
+    }
+
+    local config = cursor_configs[current_mode] or {}
+    if config.fg then vim.api.nvim_set_hl(0, "SmoothCursor", { fg = config.fg }) end
+    if config.text then vim.fn.sign_define("smoothcursor", { text = config.text }) end
+
+    if current_mode == "c" then vim.cmd "redraw" end
+  end,
+})
