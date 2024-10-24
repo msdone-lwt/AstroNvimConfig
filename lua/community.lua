@@ -12,8 +12,9 @@ return {
   { import = "astrocommunity.pack.cmake" },
   { import = "astrocommunity.pack.markdown" },
   { import = "astrocommunity.pack.json" },
+  -- { import = "astrocommunity.pack.nvchad-ui" },
   { import = "astrocommunity.pack.typescript-all-in-one" },
-  { import = "astrocommunity.markdown-and-latex.glow-nvim" },
-  { import = "astrocommunity.split-and-window.windows-nvim" },
+  { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
+  -- { import = "astrocommunity.split-and-window.windows-nvim" },
   -- import/override with your plugins folder
 }

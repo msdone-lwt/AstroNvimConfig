@@ -241,6 +241,8 @@ return {
           ["<leader>r"] = { "<cmd>Overseer<CR>", desc = " Overseer" },
           ["<leader>rr"] = { "<cmd>OverseerRun<CR>", desc = "List overseer run templates" },
           ["<leader>rt"] = { "<cmd>OverseerToggle<CR>", desc = "Toggle overseer task list" },
+          -- NOTE: Avante
+          ["<Leader>a"] = { name = "🤖 Avante" }, -- 其他 key mappings 在  ~/.config/nvim/lua/plugins/avante.nvim.lua
         },
         i = {
           ["<C-h>"] = { "<Cmd>wincmd h<CR>", desc = "Move to left split" },
@@ -272,6 +274,7 @@ return {
           ["p"] = { "pgvy", desc = "paste" },
           ["L"] = { "$h" },
           ["H"] = { "^" },
+          ["<Leader>a"] = { name = "🤖 Avante" }, -- 其他 key mappings 在  ~/.config/nvim/lua/plugins/avante.nvim.lua
         },
         c = {
           ["<leader><leader>w"] = { function() require("flash").toggle() end, desc = "Toggle Flash Search" },
