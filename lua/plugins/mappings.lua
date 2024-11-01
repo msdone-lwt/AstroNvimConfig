@@ -268,7 +268,8 @@ return {
           -- setting a mapping to false will disable it
           -- ["<esc>"] = false,
           ["jj"] = false,
-          ["jk"] = false,
+          -- ["jk"] = false,
+          ["<leader>q"] = { "<Cmd>confirm q<CR>", desc = "Quit Window" },
         },
         v = {
           ["p"] = { "pgvy", desc = "paste" },

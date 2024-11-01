@@ -22,6 +22,11 @@
 
 -- vim.cmd [[ highlight Cursor guifg=red guibg=yellow blend=100 ]]
 vim.g.have_nerd_font = true
+-- NOTE: copilot
+vim.g.copilot_workspace_folders = vim.fn.expand "%:p:h"
+
+-- NOTE: SmoothCursor.nvim
+vim.api.nvim_create_augroup("SmoothCursorConfig", { clear = true })
 
 -- vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
 --   callback = function()
@@ -30,9 +35,6 @@ vim.g.have_nerd_font = true
 --     vim.cmd "redraw"
 --   end,
 -- })
-
--- NOTE: SmoothCursor.nvim
-vim.api.nvim_create_augroup("SmoothCursorConfig", { clear = true })
 
 vim.api.nvim_create_autocmd("ModeChanged", {
   group = "SmoothCursorConfig",

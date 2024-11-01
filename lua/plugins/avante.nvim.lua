@@ -18,8 +18,9 @@ return {
     ---@type AvanteSupportedProvider
     copilot = {
       -- endpoint = "https://api.githubcopilot.com",
+      -- NOTE:  claude-3.5-sonnet,o1-preview-2024-09-12,o1-mini-2024-09-12,o1-mini(Preview),o1-preview(Preview),gpt-4o
       model = "gpt-4o",
-      -- proxy = nil, -- [protocol://]host[:port] Use this proxy
+      -- proxy = "http://127.0.1.1:7890", -- [protocol://]host[:port] Use this proxy
       -- allow_insecure = false, -- Allow insecure server connections
       -- timeout = 30000, -- Timeout in milliseconds
       -- temperature = 0,
