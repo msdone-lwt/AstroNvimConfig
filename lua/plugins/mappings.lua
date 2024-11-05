@@ -295,10 +295,16 @@ return {
             desc = "Hover symbol details",
           },
           -- condition for only server with declaration capabilities
-          gD = {
-            function() vim.lsp.buf.declaration() end,
-            desc = "Declaration of current symbol",
-            cond = "textDocument/declaration",
+          gd = {
+            -- function() vim.lsp.buf.declaration() end,
+            -- desc = "Declaration of current symbol",
+            -- cond = "textDocument/declaration",
+            function() require("telescope.builtin").lsp_definitions() end,
+            desc = "Show LSP Definition",
+          },
+          gr = {
+            function() require("telescope.builtin").lsp_references() end,
+            desc = "Show LSP References",
           },
         },
       },
