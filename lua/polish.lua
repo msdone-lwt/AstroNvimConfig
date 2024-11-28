@@ -25,6 +25,14 @@ vim.g.have_nerd_font = true
 -- NOTE: copilot
 vim.g.copilot_workspace_folders = vim.fn.expand "%:p:h"
 
+-- NOTE: git-blame.nvim
+-- vim.api.nvim_set_hl(
+--   0,
+--   "gitBlameVirtualText",
+--   { fg = "#696c76", ctermfg = "#696c76", bg = "#1e222a", ctermbg = "#1e222a", italic = true, cterm = { italic = true } }
+-- )
+vim.api.nvim_set_hl(0, "gitBlameVirtualText", { fg = "#696c76", bg = "#1e222a", italic = true })
+
 -- NOTE: SmoothCursor.nvim
 vim.api.nvim_create_augroup("SmoothCursorConfig", { clear = true })
 

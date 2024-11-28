@@ -281,6 +281,7 @@ return {
         local git_branch = git_dashboard[#git_dashboard]
 
         if git_repo == nil and git_branch == nil then
+          -- vim.notify("nil")
           return {
             type = "text",
             val = " No git repository",
@@ -291,6 +292,8 @@ return {
             opts = { hl = "Constant", position = "center" },
           }
         end
+        -- vim.notify("git_repo: " .. git_repo)
+        -- vim.notify("git_branch: " .. git_branch)
 
         local git_branch_section = {
           type = "text",

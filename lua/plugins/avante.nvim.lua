@@ -12,6 +12,15 @@ return {
   opts = {
     -- add any opts here
     ---@alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
+    -- NOTE: claude
+    -- provider = "claude", -- Recommend using Claude
+    -- auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    -- claude = {
+    --   endpoint = "https://api.burn.hair",
+    --   model = "claude-3-5-sonnet-20240620",
+    --   temperature = 0,
+    --   max_tokens = 4096,
+    -- },
     -- NOTE: copilot
     provider = "copilot", -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
