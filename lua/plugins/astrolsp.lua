@@ -46,6 +46,21 @@ return {
     ---@diagnostic disable: missing-fields
     config = {
       -- clangd = { capabilities = { offsetEncoding = "utf-8" } },
+      -- vtsls = { capabilities = { inlay_hints = { enabled = true } } },
+      -- vtsls = {
+      --   settings = {
+      --     typescript = {
+      --       inlayHints = {
+      --         variableTypes = { enabled = true },
+      --         parameterNames = { enabled = "all" },
+      --         parameterTypes = { enabled = true },
+      --         enumMemberValues = { enabled = true },
+      --         functionLikeReturnTypes = { enabled = true },
+      --         propertyDeclarationTypes = { enabled = true },
+      --       },
+      --     },
+      --   },
+      -- },
     },
     -- customize how language servers are attached
     handlers = {
@@ -94,6 +109,13 @@ return {
             return client.supports_method "textDocument/semanticTokens/full" and vim.lsp.semantic_tokens
           end,
         },
+        ["<Leader>lH"] = {
+          function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            vim.notify("Set the LSP hint to " .. tostring(vim.lsp.inlay_hint.is_enabled()))
+          end,
+          desc = "toggle lsp hint"
+        }
       },
     },
     -- A custom `on_attach` function to be run after the default `on_attach` function
