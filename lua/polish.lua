@@ -63,3 +63,6 @@ vim.api.nvim_set_hl(0, "gitBlameVirtualText", { fg = "#696c76", bg = "#1e222a", 
 --     if current_mode == "c" then vim.cmd "redraw" end
 --   end,
 -- })
+
+-- views can only be fully collapsed with the global statusline
+vim.opt.laststatus = 3

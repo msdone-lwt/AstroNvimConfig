@@ -15,16 +15,22 @@ return {
     -- NOTE: claude
     -- provider = "claude", -- Recommend using Claude
     -- auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    -- NOTE: copilot
+    provider = "openai", -- Recommend using Claude
+    auto_suggestions_provider = "openai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    ---@type AvanteSupportedProvider
     -- claude = {
     --   endpoint = "https://api.burn.hair",
     --   model = "claude-3-5-sonnet-20240620",
     --   temperature = 0,
     --   max_tokens = 4096,
     -- },
-    -- NOTE: copilot
-    provider = "copilot", -- Recommend using Claude
-    auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
-    ---@type AvanteSupportedProvider
+    openai = {
+      endpoint = "https://cursor.toapis.org/v1",
+      model = "claude-3.5-sonnet",
+      temperature = 0,
+      max_tokens = 4096
+    },
     copilot = {
       -- endpoint = "https://api.githubcopilot.com",
       -- NOTE:  claude-3.5-sonnet,o1-preview-2024-09-12,o1-mini-2024-09-12,o1-mini(Preview),o1-preview(Preview),gpt-4o
@@ -74,7 +80,7 @@ return {
         prev = "[x",
       },
       suggestion = {
-        accept = "<M-l>",
+        accept = "<M-m>",
         next = "<M-]>",
         prev = "<M-[>",
         dismiss = "<C-]>",
