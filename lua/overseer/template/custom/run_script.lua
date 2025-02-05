@@ -1,7 +1,7 @@
 return {
   name = "run_script",
   condition = {
-    filetype = { "sh", "python", "typescript", "javascript", "lua", "c", "cpp" },
+    filetype = { "sh", "python", "typescript", "javascript", "lua", "c", "cpp", "rust" },
   },
   builder = function()
     local cmd
@@ -53,6 +53,13 @@ return {
         "-lm",
         "&&",
         executableCodeFile,
+      }
+    elseif filetype == "rust" then
+      cmd = "cargo"
+      args = {
+        "run",
+        "--example",
+        vim.fn.expand "%:t:r"
       }
     else
       error("Unsupported filetype: " .. filetype)
