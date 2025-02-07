@@ -3,7 +3,7 @@
 -- Customize avante.nvim
 
 -- @type LazySpec
-
+-- API Check: https://check.crond.dev/
 return {
   "yetone/avante.nvim",
   event = "VeryLazy",
@@ -16,20 +16,18 @@ return {
     -- provider = "claude", -- Recommend using Claude
     -- auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- NOTE: copilot
-    provider = "openai", -- Recommend using Claude
-    auto_suggestions_provider = "openai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     ---@type AvanteSupportedProvider
-    -- claude = {
-    --   endpoint = "https://api.burn.hair",
-    --   model = "claude-3-5-sonnet-20240620",
-    --   temperature = 0,
-    --   max_tokens = 4096,
-    -- },
+    claude = {
+      endpoint = "https://burn.hair/",
+      model = "claude-3-5-sonnet-20241022",
+      temperature = 0,
+      max_tokens = 4096,
+    },
     openai = {
-      endpoint = "https://cursor.toapis.org/v1",
+      endpoint = "https://api.theoremhub.asia/v1",
       model = "claude-3.5-sonnet",
       temperature = 0,
-      max_tokens = 4096
+      max_tokens = 4096,
     },
     copilot = {
       -- endpoint = "https://api.githubcopilot.com",
@@ -41,6 +39,57 @@ return {
       -- temperature = 0,
       -- max_tokens = 4096,
     },
+    -- NOTE: Custom providers
+    vendors = {
+      ---@type AvanteProvider
+      ---["my-custom-provider"] = {
+      --   endpoint = "https://api.openai.com/v1/chat/completions", -- The full endpoint of the provider
+      --   model = "gpt-4o", -- The model name to use with this provider
+      --   api_key_name = "OPENAI_API_KEY", -- The name of the environment variable that contains the API key
+      --   --- This function below will be used to parse in cURL arguments.
+      --   --- It takes in the provider options as the first argument, followed by code_opts retrieved from given buffer.
+      --   --- This code_opts include:
+      --   --- - question: Input from the users
+      --   --- - code_lang: the language of given code buffer
+      --   --- - code_content: content of code buffer
+      --   --- - selected_code_content: (optional) If given code content is selected in visual mode as context.
+      --   ---@type fun(opts: AvanteProvider, code_opts: AvantePromptOptions): AvanteCurlOutput
+      --   parse_curl_args = function(opts, code_opts) end
+      --   --- This function will be used to parse incoming SSE stream
+      --   --- It takes in the data stream as the first argument, followed by SSE event state, and opts
+      --   --- retrieved from given buffer.
+      --   --- This opts include:
+      --   --- - on_chunk: (fun(chunk: string): any) this is invoked on parsing correct delta chunk
+      --   --- - on_complete: (fun(err: string|nil): any) this is invoked on either complete call or error chunk
+      --   ---@type fun(data_stream: string, event_state: string, opts: ResponseParser): nil
+      --   parse_response = function(data_stream, event_state, opts) end
+      --   --- The following function SHOULD only be used when providers doesn't follow SSE spec [ADVANCED]
+      --   --- this is mutually exclusive with parse_response_data
+      --   ---@type fun(data: string, handler_opts: AvanteHandlerOptions): nil
+      --   parse_stream_data = function(data, handler_opts) end
+      -- }
+      -- WARN: "https://api.theoremhub.asia/v1" 疑似降智
+      theoremhub = {
+        __inherited_from = "openai",
+        endpoint = "https://api.theoremhub.asia/v1",
+        api_key_name = "THEOREMHUB_API_KEY",
+        model = "claude-3.5-sonnet",
+      },
+      ephone = {
+        __inherited_from = "openai",
+        endpoint = "https://api.ephone.ai/v1",
+        api_key_name = "EPHONE_API_KEY",
+        model = "claude-3-5-sonnet-20241022",
+      },
+      burnhair = {
+        __inherited_from = "openai",
+        endpoint = "https://api.burn.hair/v1",
+        api_key_name = "BURNHAIR_API_KEY",
+        model = "claude-3-5-sonnet-20241022",
+      }
+    },
+    provider = "copilot", -- Recommend using Claude
+    auto_suggestions_provider = "burnhair", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- NOTE: openai
     -- provider = "openai", -- Recommend using Claude
     -- auto_suggestions_provider = "openai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
