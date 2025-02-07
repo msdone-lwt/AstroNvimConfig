@@ -89,7 +89,7 @@ return {
       }
     },
     provider = "copilot", -- Recommend using Claude
-    auto_suggestions_provider = "burnhair", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- NOTE: openai
     -- provider = "openai", -- Recommend using Claude
     -- auto_suggestions_provider = "openai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
@@ -130,8 +130,8 @@ return {
       },
       suggestion = {
         accept = "<M-m>",
-        next = "<M-]>",
-        prev = "<M-[>",
+        next = "<M-n>",
+        prev = "<M-N>",
         dismiss = "<C-]>",
       },
       jump = {
