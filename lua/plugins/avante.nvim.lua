@@ -18,8 +18,8 @@ return {
     -- NOTE: copilot
     ---@type AvanteSupportedProvider
     claude = {
-      endpoint = "https://burn.hair/",
-      model = "claude-3-5-sonnet-20241022",
+      endpoint = "https://api.aicnn.cn/v1/chat/completions",
+      model = "claude-3-5-sonnet-coder",
       temperature = 0,
       max_tokens = 4096,
     },
@@ -33,6 +33,11 @@ return {
       -- endpoint = "https://api.githubcopilot.com",
       -- NOTE:  claude-3.5-sonnet,o1-preview-2024-09-12,o1-mini-2024-09-12,o1-mini(Preview),o1-preview(Preview),gpt-4o
       model = "claude-3.5-sonnet",
+      -- model = "claude-3-5-sonnet-coder",
+      -- model = "gemini-2.0-flash-001",
+      -- model = "o3-mini-paygo",
+      -- model = "o3-mini",
+      
       -- proxy = "http://127.0.1.1:7890", -- [protocol://]host[:port] Use this proxy
       -- allow_insecure = false, -- Allow insecure server connections
       -- timeout = 30000, -- Timeout in milliseconds
@@ -86,9 +91,23 @@ return {
         endpoint = "https://api.burn.hair/v1",
         api_key_name = "BURNHAIR_API_KEY",
         model = "claude-3-5-sonnet-20241022",
+      },
+      aicnn = {
+        __inherited_from = "openai",
+        endpoint = "https://api.aicnn.cn/v1",
+        api_key_name = "AICNN_API_KEY",
+        model = "claude-3-5-sonnet-coder",
+      },
+      voapi = {
+        __inherited_from = "openai",
+        endpoint = "https://aifree4.fly.dev/v1",
+        api_key_name = "VOAPI_API_KEY",
+        -- model = "claude-3-5-sonnet-coder",
+        -- model = "claude-3-5-sonnet-20241022",
+        model = "deepseek-r1",
       }
     },
-    provider = "copilot", -- Recommend using Claude
+    provider = "voapi", -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- NOTE: openai
     -- provider = "openai", -- Recommend using Claude
