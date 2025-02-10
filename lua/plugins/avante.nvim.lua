@@ -121,6 +121,9 @@ return {
     --   max_tokens = 4096,
     --   ["local"] = false, -- local： 本地 LLM
     -- },
+    web_search_engine = {
+      provider = "tavily", -- tavily or serpapi
+    },
 
     --Specify the behaviour of avante.nvim
     --1. auto_apply_diff_after_generation: Whether to automatically apply diff after LLM response.
