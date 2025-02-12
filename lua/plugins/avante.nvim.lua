@@ -107,7 +107,7 @@ return {
         model = "deepseek-r1",
       }
     },
-    provider = "voapi", -- Recommend using Claude
+    provider = "copilot", -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- NOTE: openai
     -- provider = "openai", -- Recommend using Claude
@@ -141,6 +141,7 @@ return {
     },
     mappings = {
       ---@class AvanteConflictMappings
+      
       diff = {
         ours = "co",
         theirs = "ct",
@@ -187,6 +188,9 @@ return {
         apply_cursor = "a",
         switch_windows = "<Tab>",
         reverse_switch_windows = "<S-Tab>",
+      },
+      files = {
+        add_current = "<leader>ac", -- Add current buffer to selected files
       },
     },
   },
