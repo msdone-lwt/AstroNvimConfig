@@ -105,10 +105,18 @@ return {
         -- model = "claude-3-5-sonnet-coder",
         -- model = "claude-3-5-sonnet-20241022",
         model = "deepseek-r1",
+      },
+      xai = {
+        __inherited_from = "openai",
+        -- endpoint = "https://api.x.ai/v1/chat/completions",
+        endpoint = "https://api.x.ai/v1",
+        api_key_name = "XAI_API_KEY",
+        model = "grok-2-vision-latest", 
+        -- model = "grok-2-latest",
       }
     },
-    provider = "copilot", -- Recommend using Claude
-    auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    provider = "xai", -- Recommend using Claude
+    auto_suggestions_provider = "xai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- NOTE: openai
     -- provider = "openai", -- Recommend using Claude
     -- auto_suggestions_provider = "openai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
