@@ -113,10 +113,20 @@ return {
         api_key_name = "XAI_API_KEY",
         model = "grok-2-vision-latest", 
         -- model = "grok-2-latest",
+      },
+      groq = {
+        __inherited_from = "openai",
+        -- endpoint = "https://api.groq.com/openai/v1/chat/completions",
+        endpoint = "https://api.groq.com/openai/v1",
+        api_key_name = "GROQ_API_KEY",
+        model = "qwen-2.5-coder-32b", 
+        -- model = "deepseek-r1-distill-qwen-32b", 
+        -- model = "deepseek-r1-distill-llama-70b", 
       }
     },
-    provider = "xai", -- Recommend using Claude
-    auto_suggestions_provider = "xai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    cursor_applying_provider = "copilot",
+    provider = "copilot", -- Recommend using Claude
+    auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- NOTE: openai
     -- provider = "openai", -- Recommend using Claude
     -- auto_suggestions_provider = "openai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
@@ -146,6 +156,7 @@ return {
       auto_set_keymaps = true,
       auto_apply_diff_after_generation = true,
       support_paste_from_clipboard = false,
+      enable_cursor_planning_mode = true
     },
     mappings = {
       ---@class AvanteConflictMappings
