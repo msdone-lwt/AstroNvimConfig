@@ -16,8 +16,8 @@ return {
           local ft_icon, ft_color = devicons.get_icon_color(filename)
 
           local function get_git_diff()
-            local icons = { removed = " ", changed = " ", added = " " }
-            -- local icons = { removed = " ", changed = " ", added = " " }
+            -- local icons = { removed = " ", changed = " ", added = " " }
+            local icons = { removed = " ", changed = " ", added = " " }
             local signs = vim.b[props.buf].gitsigns_status_dict
             local labels = {}
             if signs == nil then return labels end
@@ -42,19 +42,58 @@ return {
             if #label > 0 then table.insert(label, { "┊ " }) end
             return label
           end
-
+          -- FIXME: Use lualine instead of heirline.
+          -- local helpers = require "incline.helpers"
+          -- local aerial_component = require "lualine.components.aerial" {
+          --   self = { section = "x" },
+          --   icons_enabled = true,
+          --   sep = "  ",
+          -- }
+          -- local aerial_statusline = vim.api.nvim_win_call(
+          --   props.win,
+          --   function() return aerial_component:get_status { winid = props.win } end
+          -- )
           return {
             { get_diagnostic_label() },
             { get_git_diff() },
             { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" },
-            { 
-              filename .. " ", 
+            {
+              filename .. " ",
               gui = vim.bo[props.buf].modified and "bold,italic" or "bold,italic",
-              guifg = props.win == vim.api.nvim_get_current_win() and "#0fb81e" or "none"
+              guifg = props.win == vim.api.nvim_get_current_win() and "#0fb81e" or "none",
             },
-            { "┊  " .. vim.api.nvim_win_get_number(props.win), group = "DevIconWindows" },
+            -- { "┊  " .. vim.api.nvim_win_get_number(props.win), group = "DevIconWindows" },
+            -- { helpers.eval_statusline(aerial_component:get_status(), { winid = props.win }) }, --  FIXME: Use lualine instead of heirline.
           }
         end,
+        window = {
+          margin = {
+            horizontal = 0,
+            vertical = 0,
+          },
+          overlap = {
+            borders = true,
+            statusline = false,
+            tabline = false,
+            winbar = false,
+          },
+          placement = {
+            horizontal = "right",
+            vertical = "top",
+          },
+        },
+        ignore = {
+          buftypes = "special",
+          filetypes = { "Avante" },
+          floating_wins = true,
+          unlisted_buffers = true,
+          wintypes = "special",
+        },
+        hide = {
+          cursorline = "focused_win", -- `bool` | `"focused_win"` :如果为 `true`，与光标在同一行的 Incline 状态栏将被隐藏。如果为 `"focused_win"`，如果光标在同一行，则焦点窗口的 Incline 状态栏将被隐藏。
+          focused_win = false,
+          only_win = false,
+        },
       }
     end,
     -- Optional: Lazy load Incline
