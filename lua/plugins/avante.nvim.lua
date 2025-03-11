@@ -6,8 +6,8 @@
 -- API Check: https://check.crond.dev/
 return {
   "yetone/avante.nvim",
-  event = "VeryLazy",
-  lazy = false,
+  -- event = "VeryLazy",  -- lazy event
+  event = "User AstroFile", -- astroNvim event
   version = false, -- set this if you want to always pull the latest change
   opts = {
     -- add any opts here
@@ -18,10 +18,14 @@ return {
     -- NOTE: copilot
     ---@type AvanteSupportedProvider
     claude = {
-      endpoint = "https://api.aicnn.cn/v1/chat/completions",
-      model = "claude-3-5-sonnet-coder",
-      temperature = 0,
-      max_tokens = 4096,
+      endpoint = "https://api.burn.hair",
+      model = "claude-3-7-sonnet-20250219",
+      temperature = 1,
+      max_tokens = 20000,
+      thinking = {
+        type= "enabled",
+        budget_tokens= 3000
+      },
     },
     openai = {
       endpoint = "https://api.theoremhub.asia/v1",
@@ -31,18 +35,28 @@ return {
     },
     copilot = {
       -- endpoint = "https://api.githubcopilot.com",
-      -- NOTE:  claude-3.5-sonnet,o1-preview-2024-09-12,o1-mini-2024-09-12,o1-mini(Preview),o1-preview(Preview),gpt-4o
-      model = "claude-3.5-sonnet",
-      -- model = "claude-3-5-sonnet-coder",
+      -- model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
+      model = "claude-3.7-sonnet-thought",
+      -- model = "claude-3.7-sonnet",
+      -- model = "DeepSeek-R1",
+      -- model = "gpt-4o",
+      -- model = "claude-3-5-sonnet-coder", -- 不存在
       -- model = "gemini-2.0-flash-001",
-      -- model = "o3-mini-paygo",
+      -- model = "o3-mini-paygo", -- 不可用
       -- model = "o3-mini",
+      -- model = "o1",
       
       -- proxy = "http://127.0.1.1:7890", -- [protocol://]host[:port] Use this proxy
       -- allow_insecure = false, -- Allow insecure server connections
-      -- timeout = 30000, -- Timeout in milliseconds
-      -- temperature = 0,
-      -- max_tokens = 4096,
+      timeout = 60000, -- Timeout in milliseconds
+      temperature = 1,
+      max_tokens = 50000,
+      thinking = {
+        type = "enabled",
+        budget_tokens = 2048,
+      },
+      disable_tools = false,
+      display_name = "copilot claude 3.7 thinking and tools"
     },
     -- NOTE: Custom providers
     vendors = {
@@ -78,13 +92,15 @@ return {
         __inherited_from = "openai",
         endpoint = "https://api.theoremhub.asia/v1",
         api_key_name = "THEOREMHUB_API_KEY",
-        model = "claude-3.5-sonnet",
+        model = "claude-3.7-sonnet",
       },
       ephone = {
         __inherited_from = "openai",
         endpoint = "https://api.ephone.ai/v1",
         api_key_name = "EPHONE_API_KEY",
-        model = "claude-3-5-sonnet-20241022",
+        -- model = "claude-3-5-sonnet-20241022",
+        -- model = "grok-3-reasoner",
+        model = "claude-3-7-sonnet-20250219",
       },
       burnhair = {
         __inherited_from = "openai",
@@ -97,10 +113,15 @@ return {
         endpoint = "https://api.aicnn.cn/v1",
         api_key_name = "AICNN_API_KEY",
         model = "claude-3-5-sonnet-coder",
+        -- model = "claude-3-7-sonnet-20250219",
+        -- model = "grok-3-re",
+        -- model = "deepseek-reasoner-all",
+        -- model = "claude-3-5-sonnet-all",
+        -- model = "grok-3-reasoner-re",
       },
       voapi = {
         __inherited_from = "openai",
-        endpoint = "https://aifree4.fly.dev/v1",
+        endpoint = "https://free40.fly.dev/v1",
         api_key_name = "VOAPI_API_KEY",
         -- model = "claude-3-5-sonnet-coder",
         -- model = "claude-3-5-sonnet-20241022",
@@ -120,25 +141,14 @@ return {
         endpoint = "https://api.groq.com/openai/v1",
         api_key_name = "GROQ_API_KEY",
         model = "qwen-2.5-coder-32b", 
+        -- model = "llama-3.3-70b-versatile", 
         -- model = "deepseek-r1-distill-qwen-32b", 
         -- model = "deepseek-r1-distill-llama-70b", 
       }
     },
-    cursor_applying_provider = "copilot",
+    cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
     provider = "copilot", -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
-    -- NOTE: openai
-    -- provider = "openai", -- Recommend using Claude
-    -- auto_suggestions_provider = "openai", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
-    ---@type AvanteSupportedProvider
-    -- openai = {
-    --   endpoint = "https://burn.hair/v1",
-    --   model = "gpt-4o",
-    --   timeout = 30000, -- Timeout in milliseconds
-    --   temperature = 0,
-    --   max_tokens = 4096,
-    --   ["local"] = false, -- local： 本地 LLM
-    -- },
     web_search_engine = {
       provider = "tavily", -- tavily or serpapi
     },
@@ -156,7 +166,7 @@ return {
       auto_set_keymaps = true,
       auto_apply_diff_after_generation = true,
       support_paste_from_clipboard = false,
-      enable_cursor_planning_mode = true
+      enable_cursor_planning_mode = false
     },
     mappings = {
       ---@class AvanteConflictMappings
@@ -214,7 +224,7 @@ return {
     },
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-  build = "make",
+  build = vim.fn.has "win32" == 1 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" or "make",
   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
@@ -254,5 +264,43 @@ return {
       },
       ft = { "markdown", "Avante" },
     },
+    -- neo-tree 添加 file 到 avante ask 可选项
+    {
+    'nvim-neo-tree/neo-tree.nvim',
+    config = function()
+      require('neo-tree').setup({
+        filesystem = {
+          commands = {
+            avante_add_files = function(state)
+              local node = state.tree:get_node()
+              local filepath = node:get_id()
+              local relative_path = require('avante.utils').relative_path(filepath)
+
+              local sidebar = require('avante').get()
+
+              local open = sidebar:is_open()
+              -- ensure avante sidebar is open
+              if not open then
+                require('avante.api').ask()
+                sidebar = require('avante').get()
+              end
+
+              sidebar.file_selector:add_selected_file(relative_path)
+
+              -- remove neo tree buffer
+              if not open then
+                sidebar.file_selector:remove_selected_file('neo-tree filesystem [1]')
+              end
+            end,
+          },
+          window = {
+            mappings = {
+              ['oa'] = 'avante_add_files',
+            },
+          },
+        },
+      })
+    end,
+  },
   },
 }
