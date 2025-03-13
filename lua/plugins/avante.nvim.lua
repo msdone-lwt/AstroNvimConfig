@@ -36,8 +36,8 @@ return {
     copilot = {
       -- endpoint = "https://api.githubcopilot.com",
       -- model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
-      model = "claude-3.7-sonnet-thought",
-      -- model = "claude-3.7-sonnet",
+      -- model = "claude-3.7-sonnet-thought",
+      model = "claude-3.7-sonnet",
       -- model = "DeepSeek-R1",
       -- model = "gpt-4o",
       -- model = "claude-3-5-sonnet-coder", -- 不存在
@@ -51,11 +51,11 @@ return {
       timeout = 60000, -- Timeout in milliseconds
       temperature = 1,
       max_tokens = 50000,
-      thinking = {
-        type = "enabled",
-        budget_tokens = 2048,
-      },
-      disable_tools = false,
+      -- thinking = {
+      --   type = "enabled",
+      --   budget_tokens = 2048,
+      -- },
+      -- disable_tools = false,
       display_name = "copilot claude 3.7 thinking and tools",
     },
     -- NOTE: Custom providers
@@ -302,15 +302,15 @@ return {
     -- neo-tree 添加 file 到 avante ask 可选项
     {
       "nvim-neo-tree/neo-tree.nvim",
-      config = function()
-        require("neo-tree").setup {
+      opts = function (plugin, opts)
+        return require("astrocore").extend_tbl(opts, {
           filesystem = {
             commands = {
               avante_add_files = function(state)
                 local node = state.tree:get_node()
                 local filepath = node:get_id()
                 local relative_path = require("avante.utils").relative_path(filepath)
-
+                
                 local sidebar = require("avante").get()
 
                 local open = sidebar:is_open()
@@ -332,7 +332,7 @@ return {
               },
             },
           },
-        }
+        })
       end,
     },
   },
