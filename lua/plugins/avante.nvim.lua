@@ -302,7 +302,10 @@ return {
     -- neo-tree 添加 file 到 avante ask 可选项
     {
       "nvim-neo-tree/neo-tree.nvim",
-      opts = function (plugin, opts)
+      optional = true,  -- 标记为可选依赖，如果不存在不会报错
+      opts = function (_, opts)
+        local ok, _ = pcall(require, "neo-tree")
+        if not ok then return opts end  -- 如果neo-tree不存在，直接返回原始选项
         return require("astrocore").extend_tbl(opts, {
           filesystem = {
             commands = {
