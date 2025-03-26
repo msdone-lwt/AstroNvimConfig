@@ -35,9 +35,9 @@ return {
     },
     copilot = {
       -- endpoint = "https://api.githubcopilot.com",
-      -- model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
+      model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
       -- model = "claude-3.7-sonnet-thought",
-      model = "claude-3.7-sonnet",
+      -- model = "claude-3.7-sonnet",
       -- model = "DeepSeek-R1",
       -- model = "gpt-4o",
       -- model = "claude-3-5-sonnet-coder", -- 不存在
@@ -45,7 +45,7 @@ return {
       -- model = "o3-mini-paygo", -- 不可用
       -- model = "o3-mini",
       -- model = "o1",
-      
+
       -- proxy = "http://127.0.1.1:7890", -- [protocol://]host[:port] Use this proxy
       -- allow_insecure = false, -- Allow insecure server connections
       timeout = 60000, -- Timeout in milliseconds
@@ -92,7 +92,7 @@ return {
         endpoint = "https://cursor.toapis.org",
         api_key_name = "CURSOR2API_API_KEY",
         model = "claude-3-5-sonnet-200k",
-        display_name = "cursor to api: claude 3.5 200k"
+        display_name = "cursor to api: claude 3.5 200k",
       },
       ["cursor2api-c3.7thinking"] = {
         __inherited_from = "openai",
@@ -104,14 +104,14 @@ return {
           budget_tokens = 2048,
         },
         disable_tools = false,
-        display_name = "cursor to api: claude 3.7 thinking and tools"
+        display_name = "cursor to api: claude 3.7 thinking and tools",
       },
       ["cursor2api-c3.7"] = {
         __inherited_from = "openai",
         endpoint = "https://cursor.toapis.org",
         api_key_name = "CURSOR2API_API_KEY",
         model = "claude-3.7-sonnet",
-        display_name = "cursor to api: claude 3.7"
+        display_name = "cursor to api: claude 3.7",
       },
       -- WARN: "https://api.theoremhub.asia/v1" 疑似降智
       theoremhub = {
@@ -127,14 +127,14 @@ return {
         -- model = "claude-3-5-sonnet-20241022",
         -- model = "grok-3-reasoner",
         model = "claude-3-7-sonnet-20250219",
-        display_name = "ephone claude-3-7-sonnet-20250219"
+        display_name = "ephone claude-3-7-sonnet-20250219",
       },
       ["ephone_claude3.5_coder"] = {
         __inherited_from = "openai",
         endpoint = "https://api.ephone.ai/v1",
         api_key_name = "EPHONE_API_KEY",
         model = "claude-3-5-sonnet-coder",
-        display_name = "ephone claude-3-5-sonnet-coder"
+        display_name = "ephone claude-3-5-sonnet-coder",
       },
       burnhair = {
         __inherited_from = "openai",
@@ -201,6 +201,7 @@ return {
       auto_apply_diff_after_generation = true,
       support_paste_from_clipboard = true,
       enable_cursor_planning_mode = false,
+      enable_claude_text_editor_tool_mode = false,
     },
     mappings = {
       ---@class AvanteConflictMappings
@@ -256,6 +257,16 @@ return {
         add_current = "<leader>ac", -- Add current buffer to selected files
       },
     },
+    system_prompt = function()
+      local hub = require("mcphub").get_hub_instance()
+      return hub:get_active_servers_prompt()
+    end,
+    -- The custom_tools type supports both a list and a function that returns a list. Using a function here prevents requiring mcphub before it's loaded
+    custom_tools = function()
+      return {
+        require("mcphub.extensions.avante").mcp_tool(),
+      }
+    end,
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
   build = vim.fn.has "win32" == 1 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
@@ -302,10 +313,10 @@ return {
     -- neo-tree 添加 file 到 avante ask 可选项
     {
       "nvim-neo-tree/neo-tree.nvim",
-      optional = true,  -- 标记为可选依赖，如果不存在不会报错
-      opts = function (_, opts)
+      optional = true, -- 标记为可选依赖，如果不存在不会报错
+      opts = function(_, opts)
         local ok, _ = pcall(require, "neo-tree")
-        if not ok then return opts end  -- 如果neo-tree不存在，直接返回原始选项
+        if not ok then return opts end -- 如果neo-tree不存在，直接返回原始选项
         return require("astrocore").extend_tbl(opts, {
           filesystem = {
             commands = {
@@ -313,7 +324,7 @@ return {
                 local node = state.tree:get_node()
                 local filepath = node:get_id()
                 local relative_path = require("avante.utils").relative_path(filepath)
-                
+
                 local sidebar = require("avante").get()
 
                 local open = sidebar:is_open()
@@ -336,6 +347,40 @@ return {
             },
           },
         })
+      end,
+    },
+    {
+      "ravitemer/mcphub.nvim",
+      -- Ensure these are installed as they're required by most MCP servers
+         -- node --version    # Should be >= 18.0.0
+         -- python --version  # Should be installed
+         -- uvx --version    # Should be installed
+         -- npx --version    # Should be installed
+      dependencies = {
+        "nvim-lua/plenary.nvim", -- Required for Job and HTTP requests
+      },
+      -- cmd = "MCPHub", -- lazily start the hub when `MCPHub` is called
+      build = "npm install -g mcp-hub@latest", -- Installs required mcp-hub npm module
+      config = function()
+        require("mcphub").setup {
+          -- Required options
+          port = 3000, -- Port for MCP Hub server
+          config = vim.fn.stdpath "config" .. "/lua/mcphub/mcpservers.json", -- Config file in neovim config directory
+
+          -- Optional options
+          on_ready = function(hub)
+            -- Called when hub is ready
+          end,
+          on_error = function(err)
+            -- Called on errors
+          end,
+          log = {
+            level = vim.log.levels.WARN,
+            to_file = false,
+            file_path = nil,
+            prefix = "MCPHub",
+          },
+        }
       end,
     },
   },
