@@ -35,9 +35,9 @@ return {
     },
     copilot = {
       -- endpoint = "https://api.githubcopilot.com",
-      model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
+      -- model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
       -- model = "claude-3.7-sonnet-thought",
-      -- model = "claude-3.7-sonnet",
+      model = "claude-3.7-sonnet",
       -- model = "DeepSeek-R1",
       -- model = "gpt-4o",
       -- model = "claude-3-5-sonnet-coder", -- 不存在
@@ -55,8 +55,9 @@ return {
       --   type = "enabled",
       --   budget_tokens = 2048,
       -- },
-      -- disable_tools = false,
-      display_name = "copilot claude 3.7 thinking and tools",
+      -- disable_tools = true,
+      -- disable_tools = { "git_diff", "git_commit" },
+      -- display_name = "copilot claude 3.7 thinking and tools",
     },
     -- NOTE: Custom providers
     vendors = {
@@ -183,6 +184,7 @@ return {
     cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
     provider = "copilot", -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    disabled_tools = { "git_diff", "git_commit" },
     web_search_engine = {
       provider = "tavily", -- tavily or serpapi
     },
@@ -201,7 +203,7 @@ return {
       auto_apply_diff_after_generation = true,
       support_paste_from_clipboard = true,
       enable_cursor_planning_mode = false,
-      enable_claude_text_editor_tool_mode = false,
+      enable_claude_text_editor_tool_mode = true,
     },
     mappings = {
       ---@class AvanteConflictMappings
@@ -282,7 +284,7 @@ return {
     {
       "zbirenbaum/copilot.lua",
       opts = {
-        copilot_node_command = vim.fn.expand "$HOME" .. "/.nvm/versions/node/v18.20.4/bin/node", -- 不同机器需要修改
+        copilot_node_command = (vim.fn.has "wsl" == 1 and vim.fn.hostname() == "OpenValley-LWT") and (vim.fn.expand "$HOME" .. "/.nvm/versions/node/v18.20.4/bin/node") or nil, -- 仅在 WSL 并且主机名为 open 时设置
       },
     }, -- for providers='copilot'
     {
