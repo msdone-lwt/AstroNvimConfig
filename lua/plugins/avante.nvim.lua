@@ -313,41 +313,37 @@ return {
     -- neo-tree 添加 file 到 avante ask 可选项
     {
       "nvim-neo-tree/neo-tree.nvim",
-      optional = true, -- 标记为可选依赖，如果不存在不会报错
-      opts = function(_, opts)
-        local ok, _ = pcall(require, "neo-tree")
-        if not ok then return opts end -- 如果neo-tree不存在，直接返回原始选项
-        return require("astrocore").extend_tbl(opts, {
-          filesystem = {
-            commands = {
-              avante_add_files = function(state)
-                local node = state.tree:get_node()
-                local filepath = node:get_id()
-                local relative_path = require("avante.utils").relative_path(filepath)
+      optional = true,
+      opts = {
+        filesystem = {
+          commands = {
+            avante_add_files = function(state)
+              local node = state.tree:get_node()
+              local filepath = node:get_id()
+              local relative_path = require("avante.utils").relative_path(filepath)
 
-                local sidebar = require("avante").get()
+              local sidebar = require("avante").get()
 
-                local open = sidebar:is_open()
-                -- ensure avante sidebar is open
-                if not open then
-                  require("avante.api").ask()
-                  sidebar = require("avante").get()
-                end
+              local open = sidebar:is_open()
+              -- ensure avante sidebar is open
+              if not open then
+                require("avante.api").ask()
+                sidebar = require("avante").get()
+              end
 
-                sidebar.file_selector:add_selected_file(relative_path)
+              sidebar.file_selector:add_selected_file(relative_path)
 
-                -- remove neo tree buffer
-                if not open then sidebar.file_selector:remove_selected_file "neo-tree filesystem [1]" end
-              end,
-            },
-            window = {
-              mappings = {
-                ["oa"] = "avante_add_files",
-              },
-            },
+              -- remove neo tree buffer
+              if not open then sidebar.file_selector:remove_selected_file "neo-tree filesystem [1]" end
+            end,
           },
-        })
-      end,
+        },
+        window = {
+          mappings = {
+            ["oa"] = "avante_add_files",
+          },
+        },
+      },
     },
     {
       "ravitemer/mcphub.nvim",
