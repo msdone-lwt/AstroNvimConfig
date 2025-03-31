@@ -350,20 +350,59 @@ return {
     {
       "ravitemer/mcphub.nvim",
       -- Ensure these are installed as they're required by most MCP servers
-         -- node --version    # Should be >= 18.0.0
-         -- python --version  # Should be installed
-         -- uvx --version    # Should be installed
-         -- npx --version    # Should be installed
+      -- node --version    # Should be >= 18.0.0
+      -- python --version  # Should be installed
+      -- uvx --version    # Should be installed
+      -- npx --version    # Should be installed
       dependencies = {
         "nvim-lua/plenary.nvim", -- Required for Job and HTTP requests
       },
       -- cmd = "MCPHub", -- lazily start the hub when `MCPHub` is called
       build = "npm install -g mcp-hub@latest", -- Installs required mcp-hub npm module
       config = function()
+        -- 创建配置目录（如果不存在）
+        local config_dir = vim.fn.stdpath "config" .. "/lua/mcphub"
+        local config_path = config_dir .. "/mcpservers.json"
+        
+        -- 确保目录存在
+        vim.fn.mkdir(config_dir, "p")
+        
+        -- 从环境变量读取 API 密钥，如果不存在则使用默认值
+        local amap_api_key = os.getenv("AMAP_MAPS_API_KEY")
+        
+        -- 创建配置文件内容
+        local config_content = vim.fn.json_encode({
+          mcpServers = {
+            ["github.com/modelcontextprotocol/servers/tree/main/src/git"] = {
+              command = "uvx",
+              name = "Git Tools",
+              args = {"mcp-server-git", "--repository", vim.fn.getcwd()},
+              description = "A Model Context Protocol server for Git repository interaction and automation"
+            },
+            ["amap-maps"] = {
+              command = "npx",
+              name = "amap-maps",
+              description = "MCP server for using the AMap Maps API.(install by <npm install -g @amap/amap-maps-mcp-server>)",
+              args = {"-y", "@amap/amap-maps-mcp-server"},
+              env = {
+                AMAP_MAPS_API_KEY = amap_api_key
+              }
+            }
+          }
+        })
+        
+        -- 写入配置文件
+        local file = io.open(config_path, "w")
+        if file then
+          file:write(config_content)
+          file:close()
+        else
+          vim.notify("无法创建 MCPHub 配置文件", vim.log.levels.ERROR)
+        end
         require("mcphub").setup {
           -- Required options
           port = 3000, -- Port for MCP Hub server
-          config = vim.fn.stdpath "config" .. "/lua/mcphub/mcpservers.json", -- Config file in neovim config directory
+          config = config_path, -- Config file in neovim config directory
 
           -- Optional options
           on_ready = function(hub)
