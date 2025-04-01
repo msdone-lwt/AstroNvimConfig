@@ -33,6 +33,12 @@ return {
       temperature = 0,
       max_tokens = 4096,
     },
+    gemini = {
+      -- model = "gemini-2.5-pro-exp-03-25",
+      model = "gemini-2.5-pro-exp-03-25",
+      temperature = 1.5,
+      max_tokens = 20000,
+    },
     copilot = {
       -- endpoint = "https://api.githubcopilot.com",
       -- model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
@@ -138,10 +144,10 @@ return {
         display_name = "ephone claude-3-5-sonnet-coder",
       },
       burnhair = {
-        __inherited_from = "openai",
-        endpoint = "https://api.burn.hair/v1",
+        __inherited_from = "claude",
+        endpoint = "https://api.burn.hair",
         api_key_name = "BURNHAIR_API_KEY",
-        model = "claude-3-5-sonnet-20241022",
+        model = "claude-3-7-sonnet-20250219",
       },
       aicnn = {
         __inherited_from = "openai",
@@ -180,6 +186,24 @@ return {
         -- model = "deepseek-r1-distill-qwen-32b",
         -- model = "deepseek-r1-distill-llama-70b",
       },
+      openRouter = {
+        __inherited_from = "openai",
+        endpoint = "https://openrouter.ai/api/v1",
+        api_key_name = "OPENROUTER_API_KEY",
+        model = "google/gemini-2.5-pro-exp-03-25:free",
+      },
+      ["copilot-claude3.5"] = {
+        __inherited_from = "copilot",
+        model = "claude-3.5-sonnet",
+      },
+      ["copilot-claude3.7-thinking"] = {
+        __inherited_from = "copilot",
+        model = "claude-3.7-sonnet-thought",
+        thinking = {
+          type = "enabled",
+          budget_tokens = 2048,
+        },
+      },
     },
     cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
     provider = "copilot", -- Recommend using Claude
@@ -203,7 +227,33 @@ return {
       auto_apply_diff_after_generation = true,
       support_paste_from_clipboard = true,
       enable_cursor_planning_mode = false,
-      enable_claude_text_editor_tool_mode = true,
+      enable_claude_text_editor_tool_mode = false,
+    },
+    windows = {
+      ---@type "right" | "left" | "top" | "bottom"
+      position = "right", -- the position of the sidebar
+      wrap = true, -- similar to vim.o.wrap
+      width = 30, -- default % based on available width
+      sidebar_header = {
+        enabled = true, -- true, false to enable/disable the header
+        align = "center", -- left, center, right for title
+        rounded = true,
+      },
+      input = {
+        prefix = "> ",
+        height = 8, -- Height of the input window in vertical layout
+      },
+      edit = {
+        border = "rounded",
+        start_insert = true, -- Start insert mode when opening the edit window
+      },
+      ask = {
+        floating = false, -- Open the 'AvanteAsk' prompt in a floating window
+        start_insert = false, -- Start insert mode when opening the ask window
+        border = "rounded",
+        ---@type "ours" | "theirs"
+        focus_on_apply = "theirs", -- which diff to focus after applying
+      },
     },
     mappings = {
       ---@class AvanteConflictMappings
@@ -284,7 +334,9 @@ return {
     {
       "zbirenbaum/copilot.lua",
       opts = {
-        copilot_node_command = (vim.fn.has "wsl" == 1 and vim.fn.hostname() == "OpenValley-LWT") and (vim.fn.expand "$HOME" .. "/.nvm/versions/node/v18.20.4/bin/node") or nil, -- 仅在 WSL 并且主机名为 open 时设置
+        copilot_node_command = (vim.fn.has "wsl" == 1 and vim.fn.hostname() == "OpenValley-LWT")
+            and (vim.fn.expand "$HOME" .. "/.nvm/versions/node/v23.0.0/bin/node")
+          or nil, -- 仅在 WSL 并且主机名为 open 时设置
       },
     }, -- for providers='copilot'
     {
@@ -363,34 +415,41 @@ return {
         -- 创建配置目录（如果不存在）
         local config_dir = vim.fn.stdpath "config" .. "/lua/mcphub"
         local config_path = config_dir .. "/mcpservers.json"
-        
+
         -- 确保目录存在
         vim.fn.mkdir(config_dir, "p")
-        
+
         -- 从环境变量读取 API 密钥，如果不存在则使用默认值
-        local amap_api_key = os.getenv("AMAP_MAPS_API_KEY")
-        
+        local amap_api_key = os.getenv "AMAP_MAPS_API_KEY"
+        local notion_api_key = os.getenv "NOTION_INTEGRATION_TOKEN"
+
         -- 创建配置文件内容
-        local config_content = vim.fn.json_encode({
+        local config_content = vim.fn.json_encode {
           mcpServers = {
             ["github.com/modelcontextprotocol/servers/tree/main/src/git"] = {
               command = "uvx",
               name = "Git Tools",
-              args = {"mcp-server-git", "--repository", vim.fn.getcwd()},
-              description = "A Model Context Protocol server for Git repository interaction and automation"
+              args = { "mcp-server-git", "--repository", vim.fn.getcwd() },
+              description = "A Model Context Protocol server for Git repository interaction and automation",
             },
             ["amap-maps"] = {
               command = "npx",
               name = "amap-maps",
               description = "MCP server for using the AMap Maps API.(install by <npm install -g @amap/amap-maps-mcp-server>)",
-              args = {"-y", "@amap/amap-maps-mcp-server"},
+              args = { "-y", "@amap/amap-maps-mcp-server" },
               env = {
-                AMAP_MAPS_API_KEY = amap_api_key
-              }
-            }
-          }
-        })
-        
+                AMAP_MAPS_API_KEY = amap_api_key,
+              },
+            },
+            ["notion-mcp-server"] = {
+              command = "npx",
+              name = "notion-mcp-server",
+              description = "MCP server for Notion integration.(install by <npm install -g @orbit-logistics/notion-mcp-server>)",
+              args = { "-y", "@orbit-logistics/notion-mcp-server", "-t", notion_api_key },
+            },
+          },
+        }
+
         -- 写入配置文件
         local file = io.open(config_path, "w")
         if file then
@@ -399,6 +458,7 @@ return {
         else
           vim.notify("无法创建 MCPHub 配置文件", vim.log.levels.ERROR)
         end
+
         require("mcphub").setup {
           -- Required options
           port = 3000, -- Port for MCP Hub server
