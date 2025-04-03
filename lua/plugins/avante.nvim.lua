@@ -257,7 +257,7 @@ return {
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
       position = "right", -- the position of the sidebar
-      wrap = true, -- similar to vim.o.wrap
+      wrap = false, -- similar to vim.o.wrap
       width = 30, -- default % based on available width
       sidebar_header = {
         enabled = true, -- true, false to enable/disable the header
@@ -502,17 +502,109 @@ return {
           end,
           on_error = function(err)
             -- Called on errors
+            -- TODO: english
             vim.notify(err, vim.log.levels.DEBUG)
+            
+            -- 提取包名信息的函数
+            local function extract_package_name(config)
+              if not config or not config.command or not config.args then
+                return nil
+              end
+              
+              local command, args = config.command, config.args
+              
+              if command == "npx" and #args >= 2 then
+                -- 对于 npx 命令，第二个参数通常是包名
+                return args[2] -- 对于 @scope/package 格式会完整保留
+              elseif command == "uvx" and #args >= 1 then
+                -- 对于 uvx 命令，第一个参数通常是包名
+                return args[1]
+              end
+              
+              return nil
+            end
+            
+            -- 检查依赖是否已安装的函数
+            local function check_dependency(command, package_name, server_name, callback)
+              local check_cmd
+              
+              if command == "npx" then
+                check_cmd = "npm list -g " .. package_name .. " --depth=0"
+              elseif command == "uvx" then
+                check_cmd = "uv pip show " .. package_name .. " --python ~/.mcp-hub/cache/.venv/bin/python"
+              else
+                return -- 不支持的命令类型
+              end
+              
+              vim.notify("正在检查 " .. server_name .. " 依赖: " .. package_name, vim.log.levels.INFO)
+              
+              vim.fn.jobstart(check_cmd, {
+                on_exit = function(_, code)
+                  -- 如果退出代码不为0，则表示依赖未安装
+                  callback(code ~= 0)
+                end,
+              })
+            end
+            
+            -- 安装依赖的函数
+            local function install_dependency(command, package_name, server_name)
+              local install_cmd
+              
+              if command == "npx" then
+                install_cmd = "npm install -g " .. package_name
+              elseif command == "uvx" then
+                install_cmd = "uv pip install " .. package_name .. " --python ~/.mcp-hub/cache/.venv/bin/python"
+              else
+                return -- 不支持的命令类型
+              end
+              
+              vim.notify(package_name .. " 未安装，正在安装...", vim.log.levels.INFO)
+              vim.notify("执行: " .. install_cmd, vim.log.levels.INFO)
+              
+              vim.fn.jobstart(install_cmd, {
+                on_exit = function(_, code)
+                  if code == 0 then
+                    vim.notify(package_name .. " 已成功安装", vim.log.levels.INFO)
+                    
+                    -- 安装成功后尝试重启MCP Hub
+                    vim.defer_fn(function()
+                      local hub = require("mcphub").get_hub_instance()
+                      if hub then
+                        hub:restart(nil)
+                        vim.notify("已尝试重启 MCP Hub", vim.log.levels.INFO)
+                      end
+                    end, 1000)
+                  else
+                    vim.notify(package_name .. " 安装失败，错误码: " .. code, vim.log.levels.ERROR)
+                  end
+                end,
+                on_stdout = function(_, data)
+                  if data and #data > 0 then
+                    vim.notify("安装输出: " .. table.concat(data, "\n"), vim.log.levels.DEBUG)
+                  end
+                end,
+                on_stderr = function(_, data)
+                  if data and #data > 0 then
+                    vim.notify("安装错误: " .. table.concat(data, "\n"), vim.log.levels.WARN)
+                  end
+                end,
+              })
+            end
+
+            -- 获取错误和配置信息
             local errors = require("mcphub").get_state().errors.items
-            local server_names = {}
+
             local server_configs = require("mcphub").get_state().servers_config
 
-            -- 先显示配置信息便于调试
+            -- Debug: 显示配置信息便于调试
             vim.notify(vim.inspect(server_configs), vim.log.levels.DEBUG)
-
+            
             -- 收集出现错误的服务器名称
-            for _, err in ipairs(errors) do
-              if err.details and err.details.server then table.insert(server_names, err.details.server) end
+            local server_names = {}
+            for _, err_item in ipairs(errors) do
+              if err_item.details and err_item.details.server then 
+                table.insert(server_names, err_item.details.server)
+              end
             end
 
             -- 处理出错的服务器
@@ -522,89 +614,18 @@ return {
               -- 为每个出错的服务器检查并安装依赖
               for _, server_name in ipairs(server_names) do
                 local config = server_configs[server_name]
-                if config then
-                  local command = config.command
-                  local package_name = nil
 
-                  -- 提取包名
-                  if command == "npx" and config.args and #config.args >= 2 then
-                    -- 对于npx命令，第二个参数通常是包名
-                    package_name = config.args[2]
-                    if package_name:sub(1, 1) == "@" then
-                      -- 处理范围包
-                      package_name = package_name
-                    end
-                  elseif command == "uvx" and config.args and #config.args >= 1 then
-                    -- 对于uvx命令，第一个参数通常是包名
-                    package_name = config.args[1]
-                  end
-
-                  if package_name then
-                    vim.notify("正在检查 " .. server_name .. " 依赖: " .. package_name, vim.log.levels.INFO)
-                    -- 首先检查依赖是否已安装
-                    local check_cmd = nil
-                    if command == "npx" then
-                      -- 对于 npm 包，检查是否已安装
-                      check_cmd = "npm list -g " .. package_name .. " --depth=0"
-                    elseif command == "uvx" then
-                      -- 对于 Python 包，检查是否已安装
-                      check_cmd = "uv pip show " .. package_name .. " --python ~/.mcp-hub/cache/.venv/bin/python"
-                    end
-
-                    vim.fn.jobstart(check_cmd, {
-                      on_exit = function(_, code)
-                        -- 如果退出代码不为0，则表示依赖未安装
-                        if code ~= 0 then
-                          vim.notify(package_name .. " 未安装，正在安装...", vim.log.levels.INFO)
-
-                          -- 创建安装命令
-                          local install_cmd = nil
-                          if command == "npx" then
-                            install_cmd = "npm install -g " .. package_name
-                          elseif command == "uvx" then
-                            install_cmd = "uv pip install " .. package_name .. " --python ~/.mcp-hub/cache/.venv/bin/python"
-                          end
-
-                          -- 执行安装命令
-                          if install_cmd then
-                            vim.notify("执行: " .. install_cmd, vim.log.levels.INFO)
-                            vim.fn.jobstart(install_cmd, {
-                              on_exit = function(_, code)
-                                if code == 0 then
-                                  vim.notify(package_name .. " 已成功安装", vim.log.levels.INFO)
-                                  -- 安装成功后尝试重启MCP Hub
-                                  vim.defer_fn(function()
-                                    local hub = require("mcphub").get_hub_instance()
-                                    if hub then
-                                      hub:restart(nil)
-                                      vim.notify("已尝试重启 MCP Hub", vim.log.levels.INFO)
-                                    end
-                                  end, 1000)
-                                else
-                                  vim.notify(
-                                    package_name .. " 安装失败，错误码: " .. code,
-                                    vim.log.levels.ERROR
-                                  )
-                                end
-                              end,
-                              on_stdout = function(_, data)
-                                if data and #data > 0 then
-                                  vim.notify("安装输出: " .. table.concat(data, "\n"), vim.log.levels.DEBUG)
-                                end
-                              end,
-                              on_stderr = function(_, data)
-                                if data and #data > 0 then
-                                  vim.notify("安装错误: " .. table.concat(data, "\n"), vim.log.levels.WARN)
-                                end
-                              end,
-                            })
-                          end
-                        end
-                      end,
-                    })
-                  end
-                else
+                if not config then
                   vim.notify("无法找到服务器 " .. server_name .. " 的配置信息", vim.log.levels.ERROR)
+                else
+                  local package_name = extract_package_name(config)
+                  if package_name then
+                    check_dependency(config.command, package_name, server_name, function(needs_install)
+                      if needs_install then
+                        install_dependency(config.command, package_name, server_name)
+                      end
+                    end)
+                  end
                 end
               end
             end
