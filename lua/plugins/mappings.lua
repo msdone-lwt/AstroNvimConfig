@@ -243,6 +243,41 @@ return {
           ["<leader>rt"] = { "<cmd>OverseerToggle<CR>", desc = "Toggle overseer task list" },
           -- NOTE: Avante
           ["<Leader>a"] = { name = "🤖 Avante" }, -- 其他 key mappings 在  ~/.config/nvim/lua/plugins/avante.nvim.lua
+          -- NOTE: marks
+          ["<Leader>m"] = { name = " Marks" },
+          ["<Leader>mt"] = { "<cmd>MarksToggleSigns<CR>", desc = "Toggle marks" },
+          ["<Leader>ml"] = { "<cmd>MarksListBuf<CR>", desc = "List buffer marks" },
+          ["<Leader>mL"] = { "<cmd>MarksListGlobal<CR>", desc = "List global marks" },
+          ["<Leader>mg"] = {
+            function()
+              vim.ui.input({ prompt = "输入书签组名: " }, function(input)
+                if input then vim.cmd("BookmarksList " .. input) end
+              end)
+            end,
+            desc = "查询指定 group_name 的书签",
+          },
+          ["<Leader>mG"] = { "<cmd>BookmarksListAll<CR>", desc = "查询所有 group 的书签" },
+          ["<leader>mp"] = {
+            function()
+              vim.ui.input({ prompt = "press letter mark to preview:" }, function(input)
+                if input then vim.cmd([[execute "normal \<Plug>(Marks-preview)]] .. input .. [[\<CR>"]])
+                end
+              end)
+            end,
+            desc = "press letter mark to preview",
+          },
+          ["m0"] = {
+            function()
+              vim.ui.input({ prompt = "添加注释,没有留空:" }, function(input)
+                if input then
+                  vim.cmd([[execute "normal \<Plug>(Marks-set-bookmark0)]] .. input .. [[\<CR>"]])
+                else
+                  vim.cmd([[execute "normal \<Plug>(Marks-set-bookmark0)\<CR>"]])
+                end
+              end)
+            end,
+            desc = "bookmarks"
+          },
         },
         i = {
           ["<C-h>"] = { "<Cmd>wincmd h<CR>", desc = "Move to left split" },

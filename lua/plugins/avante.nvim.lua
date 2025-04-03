@@ -63,7 +63,7 @@ return {
       -- },
       -- disable_tools = true,
       -- disable_tools = { "git_diff", "git_commit" },
-      -- display_name = "copilot claude 3.7 thinking and tools",
+      display_name = "copilot claude 3.7 sonnet",
     },
     -- NOTE: Custom providers
     vendors = {
@@ -192,13 +192,38 @@ return {
         api_key_name = "OPENROUTER_API_KEY",
         model = "google/gemini-2.5-pro-exp-03-25:free",
       },
+      deepsider = {
+        __inherited_from = "openai",
+        endpoint = "https://msdone1-deepsider2api.hf.space/v1",
+        api_key_name = "HUGGING_FACE_API_KEY",
+        model = "anthropic/claude-3.7-sonnet",
+        -- "deepseek/deepseek-r1",
+        -- "deepseek/deepseek-chat", # deepseek-v3
+        -- "deepseek/deepseek-chat-v3-0324", # deepseek-v3-0324
+        -- "qwen/qwq-32b", # thinking
+        -- "qwen/qwen-max",
+        -- "openai/gpt-4o",
+        -- "openai/o1",
+        -- "openai/o3-mini",
+        -- "openai/gpt-4o-mini",
+        -- "openai/gpt-4o-image",
+        -- "x-ai/grok-3",
+        -- "x-ai/grok-3-reasoner",
+        -- "anthropic/claude-3.7-sonnet",
+        -- "anthropic/claude-3.5-sonnet",
+        -- "google/gemini-2.0-flash",
+        -- "google/gemini-2.0-pro-exp-02-05",
+        -- "google/gemini-2.0-flash-thinking-exp-1219",
+      },
       ["copilot-claude3.5"] = {
         __inherited_from = "copilot",
         model = "claude-3.5-sonnet",
+        display_name = "copilot claude 3.5 sonnet",
       },
       ["copilot-claude3.7-thinking"] = {
         __inherited_from = "copilot",
         model = "claude-3.7-sonnet-thought",
+        display_name = "copilot claude 3.7 sonnet thinking",
         thinking = {
           type = "enabled",
           budget_tokens = 2048,
@@ -208,7 +233,7 @@ return {
     cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
     provider = "copilot", -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
-    disabled_tools = { "git_diff", "git_commit" },
+    -- disabled_tools = { "git_diff", "git_commit" },
     web_search_engine = {
       provider = "tavily", -- tavily or serpapi
     },
@@ -419,9 +444,9 @@ return {
         -- 确保目录存在
         vim.fn.mkdir(config_dir, "p")
 
-        -- 从环境变量读取 API 密钥，如果不存在则使用默认值
-        local amap_api_key = os.getenv "AMAP_MAPS_API_KEY"
-        local notion_api_key = os.getenv "NOTION_INTEGRATION_TOKEN"
+        -- 从环境变量读取 API 密钥，如果不存在则为空
+        local amap_api_key = os.getenv "AMAP_MAPS_API_KEY" or ""
+        local notion_api_key = os.getenv "NOTION_INTEGRATION_TOKEN" or ""
 
         -- 创建配置文件内容
         local config_content = vim.fn.json_encode {
@@ -447,6 +472,13 @@ return {
               description = "MCP server for Notion integration.(install by <npm install -g @orbit-logistics/notion-mcp-server>)",
               args = { "-y", "@orbit-logistics/notion-mcp-server", "-t", notion_api_key },
             },
+            ["mcp=hfspace"] = {
+              command = "npx",
+              args = {
+                "-y",
+                "@llmindset/mcp-hfspace",
+              },
+            },
           },
         }
 
@@ -458,7 +490,7 @@ return {
         else
           vim.notify("无法创建 MCPHub 配置文件", vim.log.levels.ERROR)
         end
-
+        
         require("mcphub").setup {
           -- Required options
           port = 3000, -- Port for MCP Hub server
@@ -470,6 +502,112 @@ return {
           end,
           on_error = function(err)
             -- Called on errors
+            vim.notify(err, vim.log.levels.DEBUG)
+            local errors = require("mcphub").get_state().errors.items
+            local server_names = {}
+            local server_configs = require("mcphub").get_state().servers_config
+
+            -- 先显示配置信息便于调试
+            vim.notify(vim.inspect(server_configs), vim.log.levels.DEBUG)
+
+            -- 收集出现错误的服务器名称
+            for _, err in ipairs(errors) do
+              if err.details and err.details.server then table.insert(server_names, err.details.server) end
+            end
+
+            -- 处理出错的服务器
+            if #server_names > 0 then
+              vim.notify("检测到以下MCP服务器出错: " .. table.concat(server_names, ", "), vim.log.levels.WARN)
+
+              -- 为每个出错的服务器检查并安装依赖
+              for _, server_name in ipairs(server_names) do
+                local config = server_configs[server_name]
+                if config then
+                  local command = config.command
+                  local package_name = nil
+
+                  -- 提取包名
+                  if command == "npx" and config.args and #config.args >= 2 then
+                    -- 对于npx命令，第二个参数通常是包名
+                    package_name = config.args[2]
+                    if package_name:sub(1, 1) == "@" then
+                      -- 处理范围包
+                      package_name = package_name
+                    end
+                  elseif command == "uvx" and config.args and #config.args >= 1 then
+                    -- 对于uvx命令，第一个参数通常是包名
+                    package_name = config.args[1]
+                  end
+
+                  if package_name then
+                    vim.notify("正在检查 " .. server_name .. " 依赖: " .. package_name, vim.log.levels.INFO)
+                    -- 首先检查依赖是否已安装
+                    local check_cmd = nil
+                    if command == "npx" then
+                      -- 对于 npm 包，检查是否已安装
+                      check_cmd = "npm list -g " .. package_name .. " --depth=0"
+                    elseif command == "uvx" then
+                      -- 对于 Python 包，检查是否已安装
+                      check_cmd = "uv pip show " .. package_name .. " --python ~/.mcp-hub/cache/.venv/bin/python"
+                    end
+
+                    vim.fn.jobstart(check_cmd, {
+                      on_exit = function(_, code)
+                        -- 如果退出代码不为0，则表示依赖未安装
+                        if code ~= 0 then
+                          vim.notify(package_name .. " 未安装，正在安装...", vim.log.levels.INFO)
+
+                          -- 创建安装命令
+                          local install_cmd = nil
+                          if command == "npx" then
+                            install_cmd = "npm install -g " .. package_name
+                          elseif command == "uvx" then
+                            install_cmd = "uv pip install " .. package_name .. " --python ~/.mcp-hub/cache/.venv/bin/python"
+                          end
+
+                          -- 执行安装命令
+                          if install_cmd then
+                            vim.notify("执行: " .. install_cmd, vim.log.levels.INFO)
+                            vim.fn.jobstart(install_cmd, {
+                              on_exit = function(_, code)
+                                if code == 0 then
+                                  vim.notify(package_name .. " 已成功安装", vim.log.levels.INFO)
+                                  -- 安装成功后尝试重启MCP Hub
+                                  vim.defer_fn(function()
+                                    local hub = require("mcphub").get_hub_instance()
+                                    if hub then
+                                      hub:restart(nil)
+                                      vim.notify("已尝试重启 MCP Hub", vim.log.levels.INFO)
+                                    end
+                                  end, 1000)
+                                else
+                                  vim.notify(
+                                    package_name .. " 安装失败，错误码: " .. code,
+                                    vim.log.levels.ERROR
+                                  )
+                                end
+                              end,
+                              on_stdout = function(_, data)
+                                if data and #data > 0 then
+                                  vim.notify("安装输出: " .. table.concat(data, "\n"), vim.log.levels.DEBUG)
+                                end
+                              end,
+                              on_stderr = function(_, data)
+                                if data and #data > 0 then
+                                  vim.notify("安装错误: " .. table.concat(data, "\n"), vim.log.levels.WARN)
+                                end
+                              end,
+                            })
+                          end
+                        end
+                      end,
+                    })
+                  end
+                else
+                  vim.notify("无法找到服务器 " .. server_name .. " 的配置信息", vim.log.levels.ERROR)
+                end
+              end
+            end
           end,
           log = {
             level = vim.log.levels.WARN,

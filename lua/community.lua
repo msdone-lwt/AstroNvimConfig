@@ -15,6 +15,7 @@ return {
   -- { import = "astrocommunity.pack.nvchad-ui" },
   { import = "astrocommunity.pack.typescript-all-in-one" },
   { import = "astrocommunity.pack.rust" },
+  { import = "astrocommunity.pack.python" },
   { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
   -- { import = "astrocommunity.split-and-window.windows-nvim" },
   -- import/override with your plugins folder
