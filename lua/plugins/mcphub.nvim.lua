@@ -1,6 +1,7 @@
 -- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
 
 -- Customize mcphub.nvim
+-- NOTE: 需要安装 npx(npm install -g npx) 和 uvx(curl -LsSf https://astral.sh/uv/install.sh | sh)
 
 -- @type LazySpec
 
@@ -167,59 +168,6 @@ return {
               end
             end,
           })
-        end
-
-        local isCommandNotFound = false
-
-        -- 检查并安装必要的依赖工具
-        local function check_and_install_dependencies()
-          -- 检查工具是否可用的函数
-          local function check_tool(tool_name, install_cmd)
-            vim.notify("Checking if " .. tool_name .. " is available...", vim.log.levels.INFO)
-
-            vim.fn.jobstart(tool_name .. " --version", {
-              on_exit = function(_, code)
-                if code ~= 0 then
-                  isCommandNotFound = true
-                  vim.notify(tool_name .. " not found, installing...", vim.log.levels.WARN)
-
-                  vim.fn.jobstart(install_cmd, {
-                    on_exit = function(_, install_code)
-                      if install_code == 0 then
-                        vim.notify(tool_name .. " successfully installed", vim.log.levels.INFO)
-                      else
-                        vim.notify("Failed to install " .. tool_name, vim.log.levels.ERROR)
-                      end
-                    end,
-                    on_stderr = function(_, data)
-                      if data and #data > 0 then
-                        vim.notify("Install error: " .. table.concat(data, "\n"), vim.log.levels.DEBUG)
-                      end
-                    end,
-                  })
-                else
-                  vim.notify(tool_name .. " is available", vim.log.levels.INFO)
-                end
-              end,
-            })
-          end
-
-          -- 检查 npx 是否可用，如不可用则安装 npm
-          check_tool("npx", "npm install -g npm@latest")
-
-          -- 检查 uv/uvx 是否可用，如不可用则安装
-          check_tool("uvx", "curl -LsSf https://astral.sh/uv/install.sh | sh && cd ~/.mcp-hub/cache && uv venv")
-        end
-
-        -- 检查并安装依赖
-        check_and_install_dependencies()
-        if isCommandNotFound then
-          local hub = require("mcphub").get_hub_instance()
-          if hub then
-            hub:restart(nil)
-            vim.notify("已尝试重启 MCP Hub", vim.log.levels.INFO)
-          end
-          return
         end
 
         -- 获取错误和配置信息
