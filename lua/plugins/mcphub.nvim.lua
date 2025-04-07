@@ -208,7 +208,7 @@ return {
           check_tool("npx", "npm install -g npm@latest")
 
           -- 检查 uv/uvx 是否可用，如不可用则安装
-          check_tool("uvx", "pip install -U uv")
+          check_tool("uvx", "curl -LsSf https://astral.sh/uv/install.sh | sh && cd ~/.mcp-hub/cache && uv venv")
         end
 
         -- 检查并安装依赖
