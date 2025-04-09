@@ -60,6 +60,11 @@ return {
             "@llmindset/mcp-hfspace",
           },
         },
+        ["mcp-git-ingest"] = {
+          name = "mcp-git-ingest",
+          command = "uvx",
+          args = {"--from", "git+https://github.com/adhikasp/mcp-git-ingest", "mcp-git-ingest"},
+        }
       },
     }
 
