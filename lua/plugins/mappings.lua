@@ -285,6 +285,9 @@ return {
           ["<C-k>"] = { "<Cmd>wincmd k<CR>", desc = "Move to above split" },
           ["<C-l>"] = { "<Cmd>wincmd l<CR>", desc = "Move to right split" },
           ["<C-v>"] = { "<C-[>pa", desc = "paste" },
+          -- ["<CR>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
+          -- inoremap <cr> <cmd>call augment#Accept("\n")<cr>
+          ["<M-m>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
         },
         x = {
           ["<Leader><Leader>"] = { name = " Flash" },
