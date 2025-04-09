@@ -96,7 +96,7 @@ return {
   --
   -- -- == Examples of Adding Plugins ==
   --
-  -- "andweeb/presence.nvim",
+  -- "andweeb/presence.nvim", -- Discord 插件，用于显示当前正在编辑的文件
   -- {
   --   "ray-x/lsp_signature.nvim",
   --   event = "BufRead",
