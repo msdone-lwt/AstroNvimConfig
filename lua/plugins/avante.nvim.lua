@@ -168,12 +168,28 @@ return {
         -- model = "claude-3-5-sonnet-20241022",
         model = "deepseek-r1",
       },
-      xai = {
+      [ "xai-grok-3-mini-thinking" ] = {
         __inherited_from = "openai",
         -- endpoint = "https://api.x.ai/v1/chat/completions",
         endpoint = "https://api.x.ai/v1",
         api_key_name = "XAI_API_KEY",
-        model = "grok-2-vision-latest",
+        -- model = "grok-3-beta",  -- 不带推理
+        model = "grok-3-mini-beta", -- 带推理
+        display_name = "xai grok-3-mini-beta thinking",
+        -- model = "grok-3-fast-beta",
+        -- model = "grok-3-mini-fast-beta",
+        -- model = "grok-2-latest",
+      },
+      [ "xai-grok-3-beta" ] = {
+        __inherited_from = "openai",
+        -- endpoint = "https://api.x.ai/v1/chat/completions",
+        endpoint = "https://api.x.ai/v1",
+        api_key_name = "XAI_API_KEY",
+        model = "grok-3-beta",  -- 不带推理
+        -- model = "grok-3-mini-beta", -- 带推理
+        display_name = "xai grok-3-beta",
+        -- model = "grok-3-fast-beta",
+        -- model = "grok-3-mini-fast-beta",
         -- model = "grok-2-latest",
       },
       groq = {
