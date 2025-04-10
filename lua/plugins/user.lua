@@ -439,4 +439,28 @@ return {
     "rebelot/heirline.nvim",
     opts = function(_, opts) opts.winbar = nil end,
   },
+  {
+    "AstroNvim/AstroNvim",
+    commit = "c5e610f614e74c9dd9bf11760c4d0ad2c98c0abe"
+  },
+  {
+    "AstroNvim/astrocommunity",
+    commit = "87dffcc5d9e3c48dcad0a6041130149352265cf1"
+  },
+  {
+    "AstroNvim/astrocore",
+    commit = "44a3dc0bf1591022b2a6bc89dccdfac1be17bec9"
+  },
+  {
+    "AstroNvim/astroui",
+    commit = "e923a84c488d879a260fc9cfb2dc27dd870fb6ac"
+  },
+  {
+    "AstroNvim/astrolsp",
+    commit = "909fbe64f3f87d089ff3777751261544557117cc"
+  },
+  {
+    "AstroNvim/astrotheme",
+    commit = "f12dcf64b1f9a05839c3ac2146f550f43bae9dab"
+  },
 }
