@@ -25,10 +25,10 @@ return {
       -- colors from highlight group there is no default table
       -- so we don't need to put a parameter for this function
       init = function()
-        -- catppuccin 设置成透明后 notify 会报错，没有背景颜色。
-        require("notify").setup({
-          background_colour = "#000000"
-        })
+        -- -- catppuccin 设置成透明后 notify 会报错，没有背景颜色。
+        -- require("notify").setup({
+        --   background_colour = "#000000"
+        -- })
         local get_hlgroup = require("astroui").get_hlgroup
         -- get highlights from highlight groups
         local normal = get_hlgroup "Normal"
