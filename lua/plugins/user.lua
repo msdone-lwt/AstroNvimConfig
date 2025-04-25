@@ -439,4 +439,73 @@ return {
     "rebelot/heirline.nvim",
     opts = function(_, opts) opts.winbar = nil end,
   },
+  {
+    "folke/snacks.nvim",
+    -- enabled = false,
+    opts = function(_, opts)
+      -- local dashboard = require "snacks.dashboard"
+--       opts.dashboard.preset.header = [[
+-- ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+-- ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+-- ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+-- ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+-- ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+-- ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]]
+
+      return require("astrocore").extend_tbl(opts, {
+        input = {},
+        -- dashboard = {
+        --   preset = {
+        --     header = nil,
+        --   },
+        --   formats = {
+        --     key = function(item) return { { "[", hl = "special" }, { item.key, hl = "key" }, { "]", hl = "special" } } end,
+        --   },
+        --   sections = {
+        --     { section = "header", hl = "header", padding = 1, indent = 8 },
+        --     { title = "MRU", padding = 1 },
+        --     { section = "recent_files", limit = 8, padding = 1 },
+        --     { title = "MRU ", file = vim.fn.fnamemodify(".", ":~"), padding = 1 },
+        --     { section = "recent_files", cwd = true, limit = 8, padding = 1 },
+        --     { title = "Sessions", padding = 1 },
+        --     { section = "projects", padding = 1 },
+        --     { title = "Bookmarks", padding = 1 },
+        --     { section = "keys" },
+        --   },
+        -- },
+        dashboard = {
+           enabled = false
+        },
+        -- toggle = {
+        -- NOTE: use: ["<leader>uV"] = { function() require("snacks").toggle.option("spell",  { name = "󰓆 Spell Checking" }):map("<leader>uV")end, desc = "input" },
+        --
+        --   map = vim.keymap.set, -- keymap.set function to use
+        --   which_key = true, -- integrate with which-key to show enabled/disabled icons and colors
+        --   notify = true, -- show a notification when toggling
+        --   -- icons for enabled/disabled states
+        --   icon = {
+        --     enabled = " ",
+        --     disabled = " ",
+        --   },
+        --   -- colors for enabled/disabled states
+        --   color = {
+        --     enabled = "green",
+        --     disabled = "yellow",
+        --   },
+        --   wk_desc = {
+        --     enabled = "Disable ",
+        --     disabled = "Enable ",
+        --   },
+        -- },
+        styles = {
+          input = {
+            title_pos = "left",
+            b = {
+              completion = true, -- disable blink completions in input
+            },
+          },
+        },
+      })
+    end,
+  },
 }

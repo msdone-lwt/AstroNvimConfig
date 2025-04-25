@@ -219,6 +219,7 @@ return {
           ["<leader>H"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
           ["L"] = { "$" },
           ["H"] = { "^" },
+          -- [":"] = { function() require("snacks").toggle.dim() end, desc = "input" },
           ["<Leader>bD"] = {
             function()
               require("astroui.status").heirline.buffer_picker(
@@ -242,7 +243,7 @@ return {
           ["<leader>rr"] = { "<cmd>OverseerRun<CR>", desc = "List overseer run templates" },
           ["<leader>rt"] = { "<cmd>OverseerToggle<CR>", desc = "Toggle overseer task list" },
           -- NOTE: Avante
-          ["<Leader>a"] = { name = "🤖 Avante" }, -- 其他 key mappings 在  ~/.config/nvim/lua/plugins/avante.nvim.lua
+          -- ["<Leader>a"] = { name = "🤖 Avante" }, -- 其他 key mappings 在  ~/.config/nvim/lua/plugins/avante.nvim.lua
           -- NOTE: marks
           ["<Leader>m"] = { name = " Marks" },
           ["<Leader>mt"] = { "<cmd>MarksToggleSigns<CR>", desc = "Toggle marks" },

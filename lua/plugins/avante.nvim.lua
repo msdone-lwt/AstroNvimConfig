@@ -168,7 +168,7 @@ return {
         -- model = "claude-3-5-sonnet-20241022",
         model = "deepseek-r1",
       },
-      [ "xai-grok-3-mini-thinking" ] = {
+      ["xai-grok-3-mini-thinking"] = {
         __inherited_from = "openai",
         -- endpoint = "https://api.x.ai/v1/chat/completions",
         endpoint = "https://api.x.ai/v1",
@@ -180,12 +180,12 @@ return {
         -- model = "grok-3-mini-fast-beta",
         -- model = "grok-2-latest",
       },
-      [ "xai-grok-3-beta" ] = {
+      ["xai-grok-3-beta"] = {
         __inherited_from = "openai",
         -- endpoint = "https://api.x.ai/v1/chat/completions",
         endpoint = "https://api.x.ai/v1",
         api_key_name = "XAI_API_KEY",
-        model = "grok-3-beta",  -- 不带推理
+        model = "grok-3-beta", -- 不带推理
         -- model = "grok-3-mini-beta", -- 带推理
         display_name = "xai grok-3-beta",
         -- model = "grok-3-fast-beta",
@@ -273,7 +273,7 @@ return {
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
       position = "right", -- the position of the sidebar
-      wrap = false, -- similar to vim.o.wrap
+      wrap = true, -- similar to vim.o.wrap
       width = 30, -- default % based on available width
       sidebar_header = {
         enabled = true, -- true, false to enable/disable the header
@@ -336,7 +336,7 @@ return {
       toggle = {
         default = "<leader>at",
         debug = "<leader>ad",
-        hint = "<leader>ah",
+        hint = "<leader>aH",
         suggestion = "<leader>as",
         repomap = "<leader>aR",
       },
@@ -347,7 +347,8 @@ return {
         reverse_switch_windows = "<S-Tab>",
       },
       files = {
-        add_current = "<leader>ac", -- Add current buffer to selected files
+        add_current = "<leader>ab", -- Add current buffer to selected files
+        add_all_buffers = "<leader>aB",
       },
     },
     system_prompt = function()
@@ -365,45 +366,61 @@ return {
   build = vim.fn.has "win32" == 1 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
     or "make",
   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-  dependencies = {
-    "nvim-treesitter/nvim-treesitter",
-    "stevearc/dressing.nvim",
-    "nvim-lua/plenary.nvim",
-    "MunifTanjim/nui.nvim",
-    --- The below dependencies are optional,
-    "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+  specs = {
+    { "AstroNvim/astroui", opts = { icons = { Avante = "" } } },
+    { "AstroNvim/astrocore", opts = function(_, opts) opts.mappings.n["<Leader>a"] = { desc = "🤖 Avante" } end },
     {
-      "zbirenbaum/copilot.lua",
-      opts = {
-        copilot_node_command = (vim.fn.has "wsl" == 1 and vim.fn.hostname() == "OpenValley-LWT")
-            and (vim.fn.expand "$HOME" .. "/.nvm/versions/node/v23.0.0/bin/node")
-          or nil, -- 仅在 WSL 并且主机名为 open 时设置
-      },
-    }, -- for providers='copilot'
-    {
-      -- support for image pasting
-      "HakonHarnes/img-clip.nvim",
-      event = "VeryLazy",
-      opts = {
-        -- recommended settings
-        default = {
-          embed_image_as_base64 = false,
-          prompt_for_file_name = false,
-          drag_and_drop = {
-            insert_mode = true,
+      "Kaiser-Yang/blink-cmp-avante",
+      lazy = true,
+      specs = {
+        {
+          "Saghen/blink.cmp",
+          optional = true,
+          opts = {
+            sources = {
+              default = { "avante" },
+              providers = {
+                avante = {
+                  module = "blink-cmp-avante",
+                  name = "Avante",
+                },
+              },
+            },
           },
-          -- required for Windows users
-          use_absolute_path = true,
         },
       },
     },
     {
-      -- Make sure to set this up properly if you have lazy=true
-      "MeanderingProgrammer/render-markdown.nvim",
-      opts = {
-        file_types = { "markdown", "Avante" },
+      "folke/snacks.nvim",
+      optional = true,
+      specs = {
+        {
+          "yetone/avante.nvim",
+          opts = {
+            selector = {
+              provider = "snacks",
+            },
+          },
+        },
       },
-      ft = { "markdown", "Avante" },
+    },
+    {
+      -- make sure `Avante` is added as a filetype
+      "MeanderingProgrammer/render-markdown.nvim",
+      optional = true,
+      opts = function(_, opts)
+        if not opts.file_types then opts.file_types = { "markdown" } end
+        opts.file_types = require("astrocore").list_insert_unique(opts.file_types, { "Avante" })
+      end,
+    },
+    {
+      -- make sure `Avante` is added as a filetype
+      "OXY2DEV/markview.nvim",
+      optional = true,
+      opts = function(_, opts)
+        if not opts.filetypes then opts.filetypes = { "markdown", "quarto", "rmd" } end
+        opts.filetypes = require("astrocore").list_insert_unique(opts.filetypes, { "Avante" })
+      end,
     },
     -- neo-tree 添加 file 到 avante ask 可选项
     {
@@ -437,6 +454,45 @@ return {
           mappings = {
             ["oa"] = "avante_add_files",
           },
+        },
+      },
+    },
+  },
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter",
+    -- "stevearc/dressing.nvim", -- 和 snacks.input 冲突
+    "nvim-lua/plenary.nvim",
+    "MunifTanjim/nui.nvim",
+    --- The below dependencies are optional,
+    "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+    {
+      "zbirenbaum/copilot.lua",
+      opts = {
+        suggestion = { enabled = true },
+        panel = { enabled = false },
+        filetypes = {
+          markdown = true,
+          help = true,
+        },
+        copilot_node_command = (vim.fn.has "wsl" == 1 and vim.fn.hostname() == "OpenValley-LWT")
+            and (vim.fn.expand "$HOME" .. "/.nvm/versions/node/v23.0.0/bin/node")
+          or nil, -- 仅在 WSL 并且主机名为 open 时设置
+      },
+    }, -- for providers='copilot'
+    {
+      -- support for image pasting
+      "HakonHarnes/img-clip.nvim",
+      event = "VeryLazy",
+      opts = {
+        -- recommended settings
+        default = {
+          embed_image_as_base64 = false,
+          prompt_for_file_name = false,
+          drag_and_drop = {
+            insert_mode = true,
+          },
+          -- required for Windows users
+          use_absolute_path = true,
         },
       },
     },

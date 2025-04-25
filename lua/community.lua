@@ -7,6 +7,7 @@
 ---@type LazySpec
 return {
   "AstroNvim/astrocommunity",
+  { import = "astrocommunity.startup.alpha-nvim" }, -- WARN: https://github.com/folke/snacks.nvim/issues/1794
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.cpp" },
   { import = "astrocommunity.pack.cmake" },
@@ -19,6 +20,7 @@ return {
   { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
   -- { import = "astrocommunity.split-and-window.windows-nvim" },
   -- import/override with your plugins folder
-  { import = "astrocommunity.recipes.telescope-nvchad-theme" },
+  -- { import = "astrocommunity.recipes.telescope-nvchad-theme" },
   -- { import = "astrocommunity.fuzzy-finder.telescope-nvim" },
+  { import = "astrocommunity.recipes.picker-nvchad-theme" },
 }
