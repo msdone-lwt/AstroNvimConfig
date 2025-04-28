@@ -335,14 +335,11 @@ return {
           },
           -- condition for only server with declaration capabilities
           gd = {
-            -- function() vim.lsp.buf.declaration() end,
-            -- desc = "Declaration of current symbol",
-            -- cond = "textDocument/declaration",
-            function() require("telescope.builtin").lsp_definitions() end,
-            desc = "Show LSP Definition",
+            function() require("snacks").picker.lsp_definitions() end,
+            desc = "Goto Definition",
           },
           gr = {
-            function() require("telescope.builtin").lsp_references() end,
+            function() require("snacks").picker.lsp_references() end,
             desc = "Show LSP References",
           },
         },
