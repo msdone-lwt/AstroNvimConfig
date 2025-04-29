@@ -1,6 +1,3 @@
-# Ignore mcphub server configuration with API keys
-lua/mcphub/mcpservers.json
-
 # Ignore other common Neovim/Lua files
 *.so
 *.swp
