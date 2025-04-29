@@ -19,8 +19,8 @@ return {
         enable = true,
       },
       ignore = { --			  |windows.ignore|
-        buftype = { "quickfix", "Avante", "AvanteInput" },
-        filetype = { "NvimTree", "neo-tree", "undotree", "gundo", "Avante", "AvanteInput" },
+        buftype = { "quickfix" },
+        filetype = { "NvimTree", "neo-tree", "undotree", "gundo", "Avante", "AvanteInput", "AvanteSelectedFiles" },
       },
       animation = {
         enable = true,
