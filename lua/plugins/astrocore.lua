@@ -1,4 +1,4 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+-- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
 
 -- AstroCore provides a central place to modify mappings, vim options, autocommands, and more!
 -- Configuration documentation can be found with `:h astrocore`
@@ -15,15 +15,9 @@ return {
       large_buf = { size = 1024 * 500, lines = 10000 }, -- set global limits for large files for disabling features like treesitter
       autopairs = true, -- enable autopairs at start
       cmp = true, -- enable completion at start
-      -- diagnostics_mode = 3, -- diagnostic mode on start (0 = off, 1 = no signs/virtual text, 2 = no virtual text, 3 = on)
-      diagnostics = { virtual_text = true, virtual_lines = true }, -- diagnostic settings on startup
+      diagnostics = { virtual_text = false, virtual_lines = true, underline = false }, -- diagnostic settings on startup
       highlighturl = true, -- highlight URLs at start
       notifications = true, -- enable notifications at start
-    },
-    -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
-    diagnostics = {
-      virtual_text = true,
-      underline = true,
     },
     -- passed to `vim.filetype.add`
     filetypes = {
@@ -58,19 +52,19 @@ return {
     mappings = {
       -- first key is the mode
       -- n = {
-        -- second key is the lefthand side of the map
+      -- second key is the lefthand side of the map
 
-        -- navigate buffer tabs
-        -- ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
-        -- ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
-        --
+      -- navigate buffer tabs
+      -- ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
+      -- ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
+      --
 
-        -- tables with just a `desc` key will be registered with which-key if it's installed
-        -- this is useful for naming menus
-        -- ["<Leader>b"] = { desc = "Buffers" },
+      -- tables with just a `desc` key will be registered with which-key if it's installed
+      -- this is useful for naming menus
+      -- ["<Leader>b"] = { desc = "Buffers" },
 
-        -- setting a mapping to false will disable it
-        -- ["<C-S>"] = false,
+      -- setting a mapping to false will disable it
+      -- ["<C-S>"] = false,
       -- },
     },
   },
