@@ -1,3 +1,9 @@
+-- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+
+-- Customize blink-emoji.nvim
+
+-- @type LazySpec
+
 return {
   "moyiz/blink-emoji.nvim",
   lazy = true,

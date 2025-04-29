@@ -1,3 +1,9 @@
+-- if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+
+-- Customize blink-copilot
+
+-- @type LazySpec
+
 return {
   "fang2hou/blink-copilot",
   lazy = true,
