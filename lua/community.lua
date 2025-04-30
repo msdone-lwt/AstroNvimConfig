@@ -23,4 +23,6 @@ return {
   -- { import = "astrocommunity.recipes.telescope-nvchad-theme" },
   -- { import = "astrocommunity.fuzzy-finder.telescope-nvim" },
   { import = "astrocommunity.recipes.picker-nvchad-theme" },
+  -- { import = "astrocommunity.utility.noice-nvim" },
+  
 }

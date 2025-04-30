@@ -444,14 +444,15 @@ return {
     -- enabled = false,
     opts = function(_, opts)
       -- local dashboard = require "snacks.dashboard"
---       opts.dashboard.preset.header = [[
--- ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
--- ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
--- ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
--- ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
--- ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
--- ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]]
+      --       opts.dashboard.preset.header = [[
+      -- ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+      -- ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+      -- ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+      -- ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+      -- ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+      -- ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]]
 
+      require("snacks").dim.enable()
       return require("astrocore").extend_tbl(opts, {
         input = {},
         -- dashboard = {
@@ -473,8 +474,11 @@ return {
         --     { section = "keys" },
         --   },
         -- },
+        dim = {},
         dashboard = {
-           enabled = false
+          enabled = false,
+        },
+        notifier = {
         },
         -- toggle = {
         -- NOTE: use: ["<leader>uV"] = { function() require("snacks").toggle.option("spell",  { name = "󰓆 Spell Checking" }):map("<leader>uV")end, desc = "input" },

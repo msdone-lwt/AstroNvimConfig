@@ -334,6 +334,8 @@ return {
             desc = "Hover symbol details",
           },
           -- condition for only server with declaration capabilities
+          -- NOTE: :  https://github.com/folke/snacks.nvim/blob/main/docs/picker.md#general
+          --  删除 nvim-tree/nvim-web-devicons
           gd = {
             function() require("snacks").picker.lsp_definitions() end,
             desc = "Goto Definition",
