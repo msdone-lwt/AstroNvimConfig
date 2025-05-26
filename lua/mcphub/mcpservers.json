@@ -1,73 +1,8 @@
 {
-  "mcpServers": {
-    "mcp-git-ingest": {
-      "name": "mcp-git-ingest",
-      "args": [
-        "--from",
-        "git+https://github.com/adhikasp/mcp-git-ingest",
-        "mcp-git-ingest"
-      ],
-      "disabled": true,
-      "command": "uvx"
-    },
-    "mcp=hfspace": {
-      "args": [
-        "-y",
-        "@llmindset/mcp-hfspace"
-      ],
-      "disabled": true,
-      "command": "npx"
-    },
-    "openharmony_read_module": {
+  "nativeMCPServers": {
+    "neovim": {
       "disabled": true
     },
-    "notion-mcp-server": {
-      "args": [
-        "-y",
-        "@orbit-logistics/notion-mcp-server",
-        "-t",
-        "$NOTION_INTEGRATION_TOKEN"
-      ],
-      "command": "npx",
-      "disabled": true,
-      "name": "notion-mcp-server",
-      "description": "MCP server for Notion integration.(install by <npm install -g @orbit-logistics/notion-mcp-server>)"
-    },
-    "github.com/modelcontextprotocol/servers/tree/main/src/git": {
-      "args": [
-        "mcp-server-git",
-        "--repository",
-        "/home/msdone/.config/astronvim5"
-      ],
-      "command": "uvx",
-      "disabled": true,
-      "name": "Git Tools",
-      "description": "A Model Context Protocol server for Git repository interaction and automation"
-    },
-    "readModule": {
-      "args": [
-        "readmodule"
-      ],
-      "command": "uvx",
-      "disabled": false,
-      "name": "OpenHarmony project read module",
-      "description": "MCP server for reading modules from a local directory"
-    },
-    "amap-maps": {
-      "args": [
-        "-y",
-        "@amap/amap-maps-mcp-server"
-      ],
-      "command": "npx",
-      "name": "amap-maps",
-      "disabled": true,
-      "env": {
-        "AMAP_MAPS_API_KEY": ""
-      },
-      "description": "MCP server for using the AMap Maps API.(install by <npm install -g @amap/amap-maps-mcp-server>)"
-    }
-  },
-  "nativeMCPServers": {
     "mcphub": {
       "disabled": true,
       "disabled_resources": [
@@ -78,9 +13,71 @@
       "disabled_prompts": [
         "create_native_server"
       ]
+    }
+  },
+  "mcpServers": {
+    "readModule": {
+      "args": [
+        "readmodule"
+      ],
+      "description": "MCP server for reading modules from a local directory",
+      "disabled": true,
+      "command": "uvx",
+      "name": "OpenHarmony project read module"
     },
-    "neovim": {
-      "disabled": true
+    "mcp-git-ingest": {
+      "args": [
+        "--from",
+        "git+https://github.com/adhikasp/mcp-git-ingest",
+        "mcp-git-ingest"
+      ],
+      "command": "uvx",
+      "disabled": true,
+      "name": "mcp-git-ingest"
+    },
+    "mcp=hfspace": {
+      "args": [
+        "-y",
+        "@llmindset/mcp-hfspace"
+      ],
+      "disabled": true,
+      "command": "npx"
+    },
+    "notion-mcp-server": {
+      "args": [
+        "-y",
+        "@orbit-logistics/notion-mcp-server",
+        "-t",
+        "$NOTION_INTEGRATION_TOKEN"
+      ],
+      "description": "MCP server for Notion integration.(install by <npm install -g @orbit-logistics/notion-mcp-server>)",
+      "disabled": true,
+      "command": "npx",
+      "name": "notion-mcp-server"
+    },
+    "github.com/modelcontextprotocol/servers/tree/main/src/git": {
+      "args": [
+        "mcp-server-git",
+        "--repository",
+        "/home/msdone/.config/astronvim5"
+      ],
+      "description": "A Model Context Protocol server for Git repository interaction and automation",
+      "disabled": true,
+      "command": "uvx",
+      "name": "Git Tools"
+    },
+    "amap-maps": {
+      "args": [
+        "-y",
+        "@amap/amap-maps-mcp-server"
+      ],
+      "env": {
+        "AMAP_MAPS_API_KEY": ""
+      },
+      "description": "MCP server for using the AMap Maps API.(install by <npm install -g @amap/amap-maps-mcp-server>)",
+      "disabled": true,
+      "command": "npx",
+      "name": "amap-maps"
     }
   }
 }
