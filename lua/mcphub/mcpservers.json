@@ -17,33 +17,16 @@
   },
   "mcpServers": {
     "readModule": {
+      "command": "uvx",
       "args": [
         "readmodule"
       ],
       "description": "MCP server for reading modules from a local directory",
-      "disabled": true,
-      "command": "uvx",
-      "name": "OpenHarmony project read module"
-    },
-    "mcp-git-ingest": {
-      "args": [
-        "--from",
-        "git+https://github.com/adhikasp/mcp-git-ingest",
-        "mcp-git-ingest"
-      ],
-      "command": "uvx",
-      "disabled": true,
-      "name": "mcp-git-ingest"
-    },
-    "mcp=hfspace": {
-      "args": [
-        "-y",
-        "@llmindset/mcp-hfspace"
-      ],
-      "disabled": true,
-      "command": "npx"
+      "name": "OpenHarmony project read module",
+      "disabled": true
     },
     "notion-mcp-server": {
+      "command": "npx",
       "args": [
         "-y",
         "@orbit-logistics/notion-mcp-server",
@@ -51,33 +34,50 @@
         "$NOTION_INTEGRATION_TOKEN"
       ],
       "description": "MCP server for Notion integration.(install by <npm install -g @orbit-logistics/notion-mcp-server>)",
-      "disabled": true,
+      "name": "notion-mcp-server",
+      "disabled": true
+    },
+    "amap-maps": {
       "command": "npx",
-      "name": "notion-mcp-server"
+      "args": [
+        "-y",
+        "@amap/amap-maps-mcp-server"
+      ],
+      "description": "MCP server for using the AMap Maps API.(install by <npm install -g @amap/amap-maps-mcp-server>)",
+      "name": "amap-maps",
+      "disabled": true,
+      "env": {
+        "AMAP_MAPS_API_KEY": ""
+      }
+    },
+    "mcp=hfspace": {
+      "command": "npx",
+      "disabled": true,
+      "args": [
+        "-y",
+        "@llmindset/mcp-hfspace"
+      ]
+    },
+    "mcp-git-ingest": {
+      "command": "uvx",
+      "name": "mcp-git-ingest",
+      "disabled": true,
+      "args": [
+        "--from",
+        "git+https://github.com/adhikasp/mcp-git-ingest",
+        "mcp-git-ingest"
+      ]
     },
     "github.com/modelcontextprotocol/servers/tree/main/src/git": {
+      "command": "uvx",
       "args": [
         "mcp-server-git",
         "--repository",
         "/home/msdone/.config/astronvim5"
       ],
       "description": "A Model Context Protocol server for Git repository interaction and automation",
-      "disabled": true,
-      "command": "uvx",
-      "name": "Git Tools"
-    },
-    "amap-maps": {
-      "args": [
-        "-y",
-        "@amap/amap-maps-mcp-server"
-      ],
-      "env": {
-        "AMAP_MAPS_API_KEY": ""
-      },
-      "description": "MCP server for using the AMap Maps API.(install by <npm install -g @amap/amap-maps-mcp-server>)",
-      "disabled": true,
-      "command": "npx",
-      "name": "amap-maps"
+      "name": "Git Tools",
+      "disabled": true
     }
   }
 }
