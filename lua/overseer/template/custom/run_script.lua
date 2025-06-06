@@ -16,8 +16,8 @@ return {
       cmd = "python3"
       args = { vim.fn.expand "%:p" }
     elseif filetype == "javascript" then
-      cmd = "node"
-      -- cmd = "tsx"
+      -- cmd = "node"
+      cmd = "tsx"
       args = { vim.fn.expand "%:p" }
     elseif filetype == "typescript" then
       cmd = "ts-node"
