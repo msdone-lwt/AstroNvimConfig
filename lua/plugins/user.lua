@@ -474,12 +474,12 @@ return {
         --     { section = "keys" },
         --   },
         -- },
+        image = {},
         dim = {},
         dashboard = {
           enabled = false,
         },
-        notifier = {
-        },
+        notifier = {},
         -- toggle = {
         -- NOTE: use: ["<leader>uV"] = { function() require("snacks").toggle.option("spell",  { name = "󰓆 Spell Checking" }):map("<leader>uV")end, desc = "input" },
         --

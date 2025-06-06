@@ -15,60 +15,67 @@ return {
     -- NOTE: claude
     -- provider = "claude", -- Recommend using Claude
     -- auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
-    -- NOTE: copilot
-    ---@type AvanteSupportedProvider
-    claude = {
-      endpoint = "https://api.burn.hair",
-      model = "claude-3-7-sonnet-20250219",
-      temperature = 1,
-      max_tokens = 20000,
-      thinking = {
-        type = "enabled",
-        budget_tokens = 3000,
+    -- NOTE: copilot @type AvanteSupportedProvider
+    providers = {
+      claude = {
+        endpoint = "https://api.burn.hair",
+        model = "claude-3-7-sonnet-20250219",
+        extra_request_body = {
+          temperature = 1,
+          max_tokens = 20000,
+        },
+        thinking = {
+          type = "enabled",
+          budget_tokens = 3000,
+        },
       },
-    },
-    openai = {
-      endpoint = "https://api.theoremhub.asia/v1",
-      model = "claude-3.5-sonnet",
-      temperature = 0,
-      max_tokens = 4096,
-    },
-    gemini = {
-      -- model = "gemini-2.5-pro-exp-03-25",
-      model = "gemini-2.5-pro-preview-05-06",
-      -- model = "gemini-2.5-flash-preview-05-20",
-      temperature = 1.5,
-      max_tokens = 20000,
-    },
-    copilot = {
-      -- endpoint = "https://api.githubcopilot.com",
-      -- model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
-      -- model = "claude-3.7-sonnet-thought",
-      model = "claude-3.7-sonnet",
-      -- model = "DeepSeek-R1",
-      -- model = "gpt-4o",
-      -- model = "claude-3-5-sonnet-coder", -- 不存在
-      -- model = "gemini-2.0-flash-001",
-      -- model = "o3-mini-paygo", -- 不可用
-      -- model = "o3-mini",
-      -- model = "o1",
+      openai = {
+        endpoint = "https://api.theoremhub.asia/v1",
+        model = "claude-3.5-sonnet",
+        extra_request_body = {
+          temperature = 0,
+          max_tokens = 4096,
+        },
+      },
+      gemini = {
+        -- model = "gemini-2.5-pro-exp-03-25",
+        model = "gemini-2.5-pro-preview-05-06",
+        -- model = "gemini-2.5-flash-preview-05-20",
+        extra_request_body = {
+          temperature = 1,
+          max_tokens = 20000,
+        },
+      },
+      copilot = {
+        -- endpoint = "https://api.githubcopilot.com",
+        -- model = "claude-3.5-sonnet", -- 20250221: claude 3.5 不能访问他不认识的 file_type: Error: 'API request failed with status 500. Body: "Internal Server Error"'
+        -- model = "claude-3.7-sonnet-thought",
+        model = "claude-3.7-sonnet",
+        -- model = "claude-sonnet-4",
+        -- model = "DeepSeek-R1",
+        -- model = "gpt-4o",
+        -- model = "claude-3-5-sonnet-coder", -- 不存在
+        -- model = "gemini-2.0-flash-001",
+        -- model = "o3-mini-paygo", -- 不可用
+        -- model = "o3-mini",
+        -- model = "o1",
+        display_name = "copilot claude 3.7 sonnet",
 
-      -- proxy = "http://127.0.1.1:7890", -- [protocol://]host[:port] Use this proxy
-      -- allow_insecure = false, -- Allow insecure server connections
-      timeout = 60000, -- Timeout in milliseconds
-      temperature = 1,
-      max_tokens = 50000,
-      -- thinking = {
-      --   type = "enabled",
-      --   budget_tokens = 2048,
-      -- },
-      -- disable_tools = true,
-      -- disable_tools = { "git_diff", "git_commit" },
-      display_name = "copilot claude 3.7 sonnet",
-    },
-    -- NOTE: Custom providers
-    vendors = {
-      ---@type AvanteProvider
+        -- proxy = "http://127.0.1.1:7890", -- [protocol://]host[:port] Use this proxy
+        -- allow_insecure = false, -- Allow insecure server connections
+        timeout = 60000, -- Timeout in milliseconds
+        extra_request_body = {
+          temperature = 1,
+          max_tokens = 100000,
+        },
+        -- thinking = {
+        --   type = "enabled",
+        --   budget_tokens = 2048,
+        -- },
+        -- disable_tools = true,
+        -- disable_tools = { "git_diff", "git_commit" },
+      },
+      -- NOTE: Custom providers
       ---["my-custom-provider"] = {
       --   endpoint = "https://api.openai.com/v1/chat/completions", -- The full endpoint of the provider
       --   model = "gpt-4o", -- The model name to use with this provider
@@ -247,10 +254,13 @@ return {
         },
       },
     },
+    ---@alias Mode "agentic" | "legacy"
+    mode = "legacy",
     cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
     provider = "copilot", -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- disabled_tools = { "git_diff", "git_commit" },
+    -- disabled_tools = { "replace_in_file"},
     web_search_engine = {
       provider = "tavily", -- tavily or serpapi
     },
@@ -266,7 +276,8 @@ return {
       auto_suggestions = false, -- Experimental stage
       auto_set_highlight_group = true,
       auto_set_keymaps = true,
-      auto_apply_diff_after_generation = true,
+      auto_apply_diff_after_generation = false,
+      jump_result_buffer_on_finish = true,
       support_paste_from_clipboard = true,
       enable_cursor_planning_mode = false,
       enable_claude_text_editor_tool_mode = false,
@@ -354,15 +365,13 @@ return {
     },
     system_prompt = function()
       local hub = require("mcphub").get_hub_instance()
-      if hub then
-        return hub:get_active_servers_prompt()
-      end
+      if hub then return hub:get_active_servers_prompt() end
     end,
     -- The custom_tools type supports both a list and a function that returns a list. Using a function here prevents requiring mcphub before it's loaded
     custom_tools = function()
       local hub = require("mcphub").get_hub_instance()
       if hub then
-        return {require("mcphub.extensions.avante").mcp_tool()}
+        return { require("mcphub.extensions.avante").mcp_tool() }
       else
         return {}
       end
