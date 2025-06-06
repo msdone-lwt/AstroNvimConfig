@@ -10,6 +10,20 @@ return {
   "AstroNvim/astrolsp",
   ---@type AstroLSPOpts
   opts = {
+  -- Configuration of LSP file operation functionality
+    file_operations = {
+      -- the timeout when executing LSP client operations
+      timeout = 10000,
+      -- fully disable/enable file operation methods
+      operations = {
+        willRename = true,
+        didRename = true,
+        willCreate = true,
+        didCreate = true,
+        willDelete = true,
+        didDelete = true,
+      },
+    },
     -- Configuration table of features provided by AstroLSP
     features = {
       autoformat = false, -- enable or disable auto formatting on start
@@ -114,8 +128,8 @@ return {
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
             vim.notify("Set the LSP hint to " .. tostring(vim.lsp.inlay_hint.is_enabled()))
           end,
-          desc = "toggle lsp hint"
-        }
+          desc = "toggle lsp hint",
+        },
       },
     },
     -- A custom `on_attach` function to be run after the default `on_attach` function
