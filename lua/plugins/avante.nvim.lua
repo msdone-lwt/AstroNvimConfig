@@ -256,7 +256,7 @@ return {
     },
     ---@alias Mode "agentic" | "legacy"
     mode = "legacy",
-    cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
+    -- cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
     provider = "copilot", -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- disabled_tools = { "git_diff", "git_commit" },
@@ -276,11 +276,11 @@ return {
       auto_suggestions = false, -- Experimental stage
       auto_set_highlight_group = true,
       auto_set_keymaps = true,
-      auto_apply_diff_after_generation = false,
+      auto_apply_diff_after_generation = true,
       jump_result_buffer_on_finish = true,
       support_paste_from_clipboard = true,
-      enable_cursor_planning_mode = false,
-      enable_claude_text_editor_tool_mode = false,
+      -- enable_cursor_planning_mode = false,
+      -- enable_claude_text_editor_tool_mode = false,
     },
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
