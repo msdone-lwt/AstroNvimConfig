@@ -6,6 +6,7 @@
 
 return {
   "sphamba/smear-cursor.nvim",
+  commit= "162703638203060b1d3412e73429d232bbd2627e",
   opts = {
     -- Smear cursor when switching buffers or windows.
     smear_between_buffers = true,
