@@ -208,7 +208,6 @@ return {
       mappings = {
         -- first key is the mode
         n = {
-          -- second key is the lefthand side of the map
           -- mappings seen under group name "Buffer"
           ["<leader><enter>"] = {
             ":silent .w !xargs -0r tmux send -t 1 -l <cr>",
@@ -261,8 +260,7 @@ return {
           ["<leader>mp"] = {
             function()
               vim.ui.input({ prompt = "press letter mark to preview:" }, function(input)
-                if input then vim.cmd([[execute "normal \<Plug>(Marks-preview)]] .. input .. [[\<CR>"]])
-                end
+                if input then vim.cmd([[execute "normal \<Plug>(Marks-preview)]] .. input .. [[\<CR>"]]) end
               end)
             end,
             desc = "press letter mark to preview",
@@ -273,11 +271,11 @@ return {
                 if input then
                   vim.cmd([[execute "normal \<Plug>(Marks-set-bookmark0)]] .. input .. [[\<CR>"]])
                 else
-                  vim.cmd([[execute "normal \<Plug>(Marks-set-bookmark0)\<CR>"]])
+                  vim.cmd [[execute "normal \<Plug>(Marks-set-bookmark0)\<CR>"]]
                 end
               end)
             end,
-            desc = "bookmarks"
+            desc = "bookmarks",
           },
         },
         i = {
@@ -286,9 +284,10 @@ return {
           ["<C-k>"] = { "<Cmd>wincmd k<CR>", desc = "Move to above split" },
           ["<C-l>"] = { "<Cmd>wincmd l<CR>", desc = "Move to right split" },
           ["<C-v>"] = { "<C-[>pa", desc = "paste" },
+          -- augment
           -- ["<CR>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
-          -- inoremap <cr> <cmd>call augment#Accept("\n")<cr>
           ["<M-m>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
+          -- ["<enter>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
         },
         x = {
           ["<Leader><Leader>"] = { name = " Flash" },

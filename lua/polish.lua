@@ -53,3 +53,4 @@ vim.api.nvim_set_hl(0, "gitBlameVirtualText", { fg = "#696c76", bg = "#1e222a", 
 
 -- views can only be fully collapsed with the global statusline
 vim.opt.laststatus = 3
+vim.g.augment_disable_tab_mapping = true

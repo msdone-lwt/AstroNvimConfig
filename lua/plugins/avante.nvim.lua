@@ -9,6 +9,7 @@ return {
   -- event = "VeryLazy",  -- lazy event
   event = "User AstroFile", -- astroNvim event
   version = false, -- set this if you want to always pull the latest change
+  -- commit = "bc96007c76175317d5dada080aef589227f14b6e",
   opts = {
     -- add any opts here
     ---@alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
@@ -17,6 +18,10 @@ return {
     -- auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- NOTE: copilot @type AvanteSupportedProvider
     providers = {
+      -- fast apply
+      morph = {
+        model = "morph-v3-large",
+      },
       claude = {
         endpoint = "https://api.burn.hair",
         model = "claude-3-7-sonnet-20250219",
@@ -39,8 +44,10 @@ return {
       },
       gemini = {
         -- model = "gemini-2.5-pro-exp-03-25",
-        model = "gemini-2.5-pro-preview-05-06",
+        -- model = "gemini-2.5-pro-preview-05-06",
         -- model = "gemini-2.5-flash-preview-05-20",
+        -- model = "gemini-2.5-flash-lite-preview-06-17",
+        model = "gemini-2.5-pro",
         extra_request_body = {
           temperature = 1,
           max_tokens = 20000,
@@ -102,39 +109,6 @@ return {
       --   ---@type fun(data: string, handler_opts: AvanteHandlerOptions): nil
       --   parse_stream_data = function(data, handler_opts) end
       -- }
-      ["cursor2api-c3.5-200k"] = {
-        __inherited_from = "openai",
-        endpoint = "https://cursor.toapis.org",
-        api_key_name = "CURSOR2API_API_KEY",
-        model = "claude-3-5-sonnet-200k",
-        display_name = "cursor to api: claude 3.5 200k",
-      },
-      ["cursor2api-c3.7thinking"] = {
-        __inherited_from = "openai",
-        endpoint = "https://cursor.toapis.org",
-        api_key_name = "CURSOR2API_API_KEY",
-        model = "claude-3.7-sonnet-thinking",
-        thinking = {
-          type = "enabled",
-          budget_tokens = 2048,
-        },
-        disable_tools = false,
-        display_name = "cursor to api: claude 3.7 thinking and tools",
-      },
-      ["cursor2api-c3.7"] = {
-        __inherited_from = "openai",
-        endpoint = "https://cursor.toapis.org",
-        api_key_name = "CURSOR2API_API_KEY",
-        model = "claude-3.7-sonnet",
-        display_name = "cursor to api: claude 3.7",
-      },
-      -- WARN: "https://api.theoremhub.asia/v1" 疑似降智
-      theoremhub = {
-        __inherited_from = "openai",
-        endpoint = "https://api.theoremhub.asia/v1",
-        api_key_name = "THEOREMHUB_API_KEY",
-        model = "claude-3.7-sonnet",
-      },
       ["ephone_claude3.7"] = {
         __inherited_from = "openai",
         endpoint = "https://api.ephone.ai/v1",
@@ -157,49 +131,6 @@ return {
         api_key_name = "BURNHAIR_API_KEY",
         model = "claude-3-7-sonnet-20250219",
       },
-      aicnn = {
-        __inherited_from = "openai",
-        endpoint = "https://api.aicnn.cn/v1",
-        api_key_name = "AICNN_API_KEY",
-        model = "claude-3-5-sonnet-coder",
-        -- model = "claude-3-7-sonnet-20250219",
-        -- model = "grok-3-re",
-        -- model = "deepseek-reasoner-all",
-        -- model = "claude-3-5-sonnet-all",
-        -- model = "grok-3-reasoner-re",
-      },
-      voapi = {
-        __inherited_from = "openai",
-        endpoint = "https://free40.fly.dev/v1",
-        api_key_name = "VOAPI_API_KEY",
-        -- model = "claude-3-5-sonnet-coder",
-        -- model = "claude-3-5-sonnet-20241022",
-        model = "deepseek-r1",
-      },
-      ["xai-grok-3-mini-thinking"] = {
-        __inherited_from = "openai",
-        -- endpoint = "https://api.x.ai/v1/chat/completions",
-        endpoint = "https://api.x.ai/v1",
-        api_key_name = "XAI_API_KEY",
-        -- model = "grok-3-beta",  -- 不带推理
-        model = "grok-3-mini-beta", -- 带推理
-        display_name = "xai grok-3-mini-beta thinking",
-        -- model = "grok-3-fast-beta",
-        -- model = "grok-3-mini-fast-beta",
-        -- model = "grok-2-latest",
-      },
-      ["xai-grok-3-beta"] = {
-        __inherited_from = "openai",
-        -- endpoint = "https://api.x.ai/v1/chat/completions",
-        endpoint = "https://api.x.ai/v1",
-        api_key_name = "XAI_API_KEY",
-        model = "grok-3-beta", -- 不带推理
-        -- model = "grok-3-mini-beta", -- 带推理
-        display_name = "xai grok-3-beta",
-        -- model = "grok-3-fast-beta",
-        -- model = "grok-3-mini-fast-beta",
-        -- model = "grok-2-latest",
-      },
       groq = {
         __inherited_from = "openai",
         -- endpoint = "https://api.groq.com/openai/v1/chat/completions",
@@ -216,28 +147,47 @@ return {
         api_key_name = "OPENROUTER_API_KEY",
         model = "google/gemini-2.5-pro-exp-03-25:free",
       },
-      deepsider = {
+      ["siliconflow-kimi-k2"] = {
         __inherited_from = "openai",
-        endpoint = "https://msdone1-deepsider2api.hf.space/v1",
-        api_key_name = "HUGGING_FACE_API_KEY",
-        model = "anthropic/claude-3.7-sonnet",
-        -- "deepseek/deepseek-r1",
-        -- "deepseek/deepseek-chat", # deepseek-v3
-        -- "deepseek/deepseek-chat-v3-0324", # deepseek-v3-0324
-        -- "qwen/qwq-32b", # thinking
-        -- "qwen/qwen-max",
-        -- "openai/gpt-4o",
-        -- "openai/o1",
-        -- "openai/o3-mini",
-        -- "openai/gpt-4o-mini",
-        -- "openai/gpt-4o-image",
-        -- "x-ai/grok-3",
-        -- "x-ai/grok-3-reasoner",
-        -- "anthropic/claude-3.7-sonnet",
-        -- "anthropic/claude-3.5-sonnet",
-        -- "google/gemini-2.0-flash",
-        -- "google/gemini-2.0-pro-exp-02-05",
-        -- "google/gemini-2.0-flash-thinking-exp-1219",
+        endpoint = "https://api.siliconflow.cn/v1",
+        api_key_name = "SILICONFLOW_API_KEY",
+        model = "moonshotai/Kimi-K2-Instruct",
+      },
+      ["siliconflow-glm-4.5"] = {
+        __inherited_from = "openai",
+        endpoint = "https://api.siliconflow.cn/v1",
+        api_key_name = "SILICONFLOW_API_KEY",
+        model = "zai-org/GLM-4.5",
+      },
+      ["modelscope-qwen3-coder-480B"] = {
+        __inherited_from = "openai",
+        endpoint = "https://api-inference.modelscope.cn/v1",
+        api_key_name = "MODELSCOPE_API_KEY",
+        model = "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+      },
+      ["modelscope-glm-4.5"] = {
+        __inherited_from = "openai",
+        endpoint = "https://api-inference.modelscope.cn/v1",
+        api_key_name = "MODELSCOPE_API_KEY",
+        model = "ZhipuAI/GLM-4.5",
+      },
+      ["targon-qwen3-coder-480B"] = {
+        __inherited_from = "openai",
+        endpoint = " https://api.targon.com/v1",
+        api_key_name = "TARGON_API_KEY",
+        model = "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
+      },
+      ["targon-glm-4.5"] = {
+        __inherited_from = "openai",
+        endpoint = " https://api.targon.com/v1",
+        api_key_name = "TARGON_API_KEY",
+        model = "zai-org/GLM-4.5",
+      },
+      ["nyxar"] = {
+        __inherited_from = "openai",
+        endpoint = "https://api.nyxar.org/v1",
+        api_key_name = "NYXAR_API_KEY",
+        model = "claude-4.0-sonnet",
       },
       ["copilot-claude3.5"] = {
         __inherited_from = "copilot",
@@ -255,10 +205,10 @@ return {
       },
     },
     ---@alias Mode "agentic" | "legacy"
-    mode = "legacy",
+    mode = "agentic",
     -- cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
-    provider = "copilot", -- Recommend using Claude
-    auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    provider = "nyxar", -- Recommend using Claude
+    auto_suggestions_provider = "gemini", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- disabled_tools = { "git_diff", "git_commit" },
     -- disabled_tools = { "replace_in_file"},
     web_search_engine = {
@@ -281,6 +231,7 @@ return {
       support_paste_from_clipboard = true,
       -- enable_cursor_planning_mode = false,
       -- enable_claude_text_editor_tool_mode = false,
+      enable_fastapply = true
     },
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
