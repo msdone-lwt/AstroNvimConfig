@@ -183,6 +183,12 @@ return {
         api_key_name = "TARGON_API_KEY",
         model = "zai-org/GLM-4.5",
       },
+      ["gemini-pool-2.5-pro"] = {
+        __inherited_from = "openai",
+        endpoint = "https://edgeapi.hinetlove.site/openai/",
+        api_key_name = "GEMINI_POOL_API_KEY",
+        model = "models/gemini-2.5-pro"
+      },
       ["nyxar"] = {
         __inherited_from = "openai",
         endpoint = "https://api.nyxar.org/v1",
