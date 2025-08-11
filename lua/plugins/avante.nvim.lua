@@ -193,7 +193,13 @@ return {
         __inherited_from = "openai",
         endpoint = "https://api.nyxar.org/v1",
         api_key_name = "NYXAR_API_KEY",
-        model = "claude-4.0-sonnet",
+        model = "claude-4.0-sonnet-think-search",
+      },
+      ["B4U"] = {
+        __inherited_from = "openai",
+        endpoint = "https://b4u.qzz.io/v1",
+        api_key_name = "B4U_API_KEY",
+        model = "claude-4-sonnet",
       },
       ["copilot-claude3.5"] = {
         __inherited_from = "copilot",
@@ -208,6 +214,21 @@ return {
           type = "enabled",
           budget_tokens = 2048,
         },
+      },
+      ["copilot-claude4"] = {
+        __inherited_from = "copilot",
+        model = "claude-sonnet-4",
+        display_name = "copilot claude 4 sonnet",
+      },
+      ["copilot-gpt5"] = {
+        __inherited_from = "copilot",
+        model = "gpt-5",
+        display_name = "copilot gpt 5",
+      },
+      ["copilot-gmini2.5pro"] = {
+        __inherited_from = "copilot",
+        model = "gemini-2.5-pro-preview-06-05",
+        display_name = "copilot gemini 2.5 pro",
       },
     },
     ---@alias Mode "agentic" | "legacy"
