@@ -8,10 +8,12 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    commit = "fa42eb5e26819ef58884257d5ae95dd0552b9a66",
     priority = 1000,
     config = function()
       require("catppuccin").setup {
         transparent_background = true, -- disables setting the background color.
+        auto_integrations = true,
       }
     end,
   },
