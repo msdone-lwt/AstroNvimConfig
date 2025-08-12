@@ -452,7 +452,7 @@ return {
       -- ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
       -- ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]]
 
-      require("snacks").dim.enable()
+      -- require("snacks").dim.enable()
       return require("astrocore").extend_tbl(opts, {
         input = {},
         -- dashboard = {
