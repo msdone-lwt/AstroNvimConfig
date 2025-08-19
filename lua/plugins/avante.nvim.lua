@@ -173,13 +173,13 @@ return {
       },
       ["targon-qwen3-coder-480B"] = {
         __inherited_from = "openai",
-        endpoint = " https://api.targon.com/v1",
+        endpoint = "https://api.targon.com/v1",
         api_key_name = "TARGON_API_KEY",
         model = "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
       },
       ["targon-glm-4.5"] = {
         __inherited_from = "openai",
-        endpoint = " https://api.targon.com/v1",
+        endpoint = "https://api.targon.com/v1",
         api_key_name = "TARGON_API_KEY",
         model = "zai-org/GLM-4.5",
       },
