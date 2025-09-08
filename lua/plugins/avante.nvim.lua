@@ -187,7 +187,7 @@ return {
         __inherited_from = "openai",
         endpoint = "https://edgeapi.hinetlove.site/openai/",
         api_key_name = "GEMINI_POOL_API_KEY",
-        model = "models/gemini-2.5-pro"
+        model = "models/gemini-2.5-pro",
       },
       ["nyxar"] = {
         __inherited_from = "openai",
@@ -230,11 +230,27 @@ return {
         model = "gemini-2.5-pro-preview-06-05",
         display_name = "copilot gemini 2.5 pro",
       },
+      ["gss-glm4.5"] = {
+        __inherited_from = "openai",
+        endpoint = "https://api.ibs-gss.top/v1",
+        api_key_name = "GSS_API_KEY",
+        model = "glm-4.5",
+      },
+    },
+    acp_providers = {
+      ["gemini-cli"] = {
+        command = "gemini",
+        args = { "--experimental-acp" },
+        env = {
+          NODE_NO_WARNINGS = "1",
+          GEMINI_API_KEY = os.getenv "GEMINI_API_KEY",
+        },
+      },
     },
     ---@alias Mode "agentic" | "legacy"
     mode = "agentic",
     -- cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
-    provider = "nyxar", -- Recommend using Claude
+    provider = "gemini-cli", -- Recommend using Claude
     auto_suggestions_provider = "gemini", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- disabled_tools = { "git_diff", "git_commit" },
     -- disabled_tools = { "replace_in_file"},
@@ -258,7 +274,7 @@ return {
       support_paste_from_clipboard = true,
       -- enable_cursor_planning_mode = false,
       -- enable_claude_text_editor_tool_mode = false,
-      enable_fastapply = true
+      enable_fastapply = true,
     },
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
