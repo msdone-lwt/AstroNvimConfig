@@ -118,12 +118,12 @@ return {
         model = "claude-3-7-sonnet-20250219",
         display_name = "ephone claude-3-7-sonnet-20250219",
       },
-      ["ephone_claude3.5_coder"] = {
+      ["ephone_gpt_5_codex"] = {
         __inherited_from = "openai",
-        endpoint = "https://api.ephone.ai/v1",
+        endpoint = "https://api.ephone.ai/v1/responses/",
         api_key_name = "EPHONE_API_KEY",
-        model = "claude-3-5-sonnet-coder",
-        display_name = "ephone claude-3-5-sonnet-coder",
+        model = "gpt-5-codex",
+        display_name = "ephone gpt 5 codex",
       },
       burnhair = {
         __inherited_from = "claude",
@@ -189,17 +189,29 @@ return {
         api_key_name = "GEMINI_POOL_API_KEY",
         model = "models/gemini-2.5-pro",
       },
-      ["nyxar"] = {
+      ["nyxar-claude-4"] = {
         __inherited_from = "openai",
         endpoint = "https://api.nyxar.org/v1",
         api_key_name = "NYXAR_API_KEY",
         model = "claude-4.0-sonnet-think-search",
       },
+      ["nyxar-gemini-25"] = {
+        __inherited_from = "openai",
+        endpoint = "https://api.nyxar.org/v1",
+        api_key_name = "NYXAR_API_KEY",
+        model = "gemini-2.5-pro",
+      },
+      ["nyxar-gpt-5"] = {
+        __inherited_from = "openai",
+        endpoint = "https://api.nyxar.org/v1",
+        api_key_name = "NYXAR_API_KEY",
+        model = "gpt-5",
+      },
       ["B4U"] = {
         __inherited_from = "openai",
         endpoint = "https://b4u.qzz.io/v1",
         api_key_name = "B4U_API_KEY",
-        model = "claude-4-sonnet",
+        model = "claude-4.5-sonnet",
       },
       ["copilot-claude3.5"] = {
         __inherited_from = "copilot",
@@ -230,11 +242,35 @@ return {
         model = "gemini-2.5-pro-preview-06-05",
         display_name = "copilot gemini 2.5 pro",
       },
-      ["gss-glm4.5"] = {
-        __inherited_from = "openai",
-        endpoint = "https://api.ibs-gss.top/v1",
-        api_key_name = "GSS_API_KEY",
-        model = "glm-4.5",
+      ["iflow-kimi-k2-instruct"] = {
+        __inherited_from = "openai", -- https://platform.iflow.cn/models
+        endpoint = "https://apis.iflow.cn/v1",
+        api_key_name = "IFLOW_API_KEY",
+        model = "kimi-k2-0905",
+      },
+      ["iflow-qwen-3-max"] = {
+        __inherited_from = "openai", -- https://platform.iflow.cn/models
+        endpoint = "https://apis.iflow.cn/v1",
+        api_key_name = "IFLOW_API_KEY",
+        model = "qwen3-max-preview",
+      },
+      ["iflow-qwen3-coder"] = {
+        __inherited_from = "openai", -- https://platform.iflow.cn/models
+        endpoint = "https://apis.iflow.cn/v1",
+        api_key_name = "IFLOW_API_KEY",
+        model = "qwen3-coder",
+      },
+      ["xmdbd-gpt-5-codex"] = {
+        __inherited_from = "openai", -- https://platform.iflow.cn/models
+        endpoint = "https://xmdbd.online/v1",
+        api_key_name = "XMDBD_API_KEY",
+        model = "gpt-5-codex",
+      },
+      ["xmdbd-gemini-25"] = {
+        __inherited_from = "openai", -- https://platform.iflow.cn/models
+        endpoint = "https://xmdbd.online/v1",
+        api_key_name = "XMDBD_API_KEY",
+        model = "gemini-2.5-pro-maxthinking",
       },
     },
     acp_providers = {
@@ -246,11 +282,19 @@ return {
           GEMINI_API_KEY = os.getenv "GEMINI_API_KEY",
         },
       },
+      ["iflow-cli"] = {
+        command = "iflow",
+        args = { "--experimental-acp" },
+        env = {
+          NODE_NO_WARNINGS = "1",
+          -- GEMINI_API_KEY = os.getenv "GEMINI_API_KEY",
+        },
+      },
     },
     ---@alias Mode "agentic" | "legacy"
     mode = "agentic",
     -- cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
-    provider = "gemini-cli", -- Recommend using Claude
+    provider = "iflow-cli", -- Recommend using Claude
     auto_suggestions_provider = "gemini", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- disabled_tools = { "git_diff", "git_commit" },
     -- disabled_tools = { "replace_in_file"},
