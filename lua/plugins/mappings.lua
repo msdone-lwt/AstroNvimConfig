@@ -286,7 +286,7 @@ return {
           ["<C-v>"] = { "<C-[>pa", desc = "paste" },
           -- augment
           -- ["<CR>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
-          ["<M-m>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
+          -- ["<M-m>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
           -- ["<enter>"] = { "<cmd>lua vim.call('augment#Accept', '\\n')<cr>", desc = "Augment Accept" },
         },
         x = {

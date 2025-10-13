@@ -289,7 +289,7 @@ return {
       support_paste_from_clipboard = true,
       -- enable_cursor_planning_mode = false,
       -- enable_claude_text_editor_tool_mode = false,
-      enable_fastapply = true,
+      enable_fastapply = false,
     },
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
@@ -497,18 +497,18 @@ return {
         "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
       },
       opts = {
-        nes = {
-          enabled = false, -- requires copilot-lsp as a dependency
-          auto_trigger = false,
-          keymap = {
-            accept_and_goto = "<M-n>",
-            accept = "<M-N>",
-            dismiss = "<M-b>",
-          },
-        },
+        -- nes = {
+        --   enabled = true, -- requires copilot-lsp as a dependency
+        --   auto_trigger = false,
+        --   keymap = {
+        --     accept_and_goto = "<M-n>",
+        --     accept = "<M-N>",
+        --     dismiss = "<M-b>",
+        --   },
+        -- },
         suggestion = {
           enabled = false,
-          auto_trigger = true,
+          auto_trigger = false,
           hide_during_completion = false,
           debounce = 75,
           trigger_on_accept = true,
