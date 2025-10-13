@@ -147,18 +147,6 @@ return {
         api_key_name = "OPENROUTER_API_KEY",
         model = "google/gemini-2.5-pro-exp-03-25:free",
       },
-      ["siliconflow-kimi-k2"] = {
-        __inherited_from = "openai",
-        endpoint = "https://api.siliconflow.cn/v1",
-        api_key_name = "SILICONFLOW_API_KEY",
-        model = "moonshotai/Kimi-K2-Instruct",
-      },
-      ["siliconflow-glm-4.5"] = {
-        __inherited_from = "openai",
-        endpoint = "https://api.siliconflow.cn/v1",
-        api_key_name = "SILICONFLOW_API_KEY",
-        model = "zai-org/GLM-4.5",
-      },
       ["modelscope-qwen3-coder-480B"] = {
         __inherited_from = "openai",
         endpoint = "https://api-inference.modelscope.cn/v1",
@@ -182,12 +170,6 @@ return {
         endpoint = "https://api.targon.com/v1",
         api_key_name = "TARGON_API_KEY",
         model = "zai-org/GLM-4.5",
-      },
-      ["gemini-pool-2.5-pro"] = {
-        __inherited_from = "openai",
-        endpoint = "https://edgeapi.hinetlove.site/openai/",
-        api_key_name = "GEMINI_POOL_API_KEY",
-        model = "models/gemini-2.5-pro",
       },
       ["nyxar-claude-4"] = {
         __inherited_from = "openai",
@@ -213,35 +195,6 @@ return {
         api_key_name = "B4U_API_KEY",
         model = "claude-4.5-sonnet",
       },
-      ["copilot-claude3.5"] = {
-        __inherited_from = "copilot",
-        model = "claude-3.5-sonnet",
-        display_name = "copilot claude 3.5 sonnet",
-      },
-      ["copilot-claude3.7-thinking"] = {
-        __inherited_from = "copilot",
-        model = "claude-3.7-sonnet-thought",
-        display_name = "copilot claude 3.7 sonnet thinking",
-        thinking = {
-          type = "enabled",
-          budget_tokens = 2048,
-        },
-      },
-      ["copilot-claude4"] = {
-        __inherited_from = "copilot",
-        model = "claude-sonnet-4",
-        display_name = "copilot claude 4 sonnet",
-      },
-      ["copilot-gpt5"] = {
-        __inherited_from = "copilot",
-        model = "gpt-5",
-        display_name = "copilot gpt 5",
-      },
-      ["copilot-gmini2.5pro"] = {
-        __inherited_from = "copilot",
-        model = "gemini-2.5-pro-preview-06-05",
-        display_name = "copilot gemini 2.5 pro",
-      },
       ["iflow-kimi-k2-instruct"] = {
         __inherited_from = "openai", -- https://platform.iflow.cn/models
         endpoint = "https://apis.iflow.cn/v1",
@@ -260,17 +213,35 @@ return {
         api_key_name = "IFLOW_API_KEY",
         model = "qwen3-coder",
       },
-      ["xmdbd-gpt-5-codex"] = {
+      ["elysia-gpt-5-codex"] = {
         __inherited_from = "openai", -- https://platform.iflow.cn/models
-        endpoint = "https://xmdbd.online/v1",
-        api_key_name = "XMDBD_API_KEY",
+        endpoint = "https://elysia.h-e.top/v1",
+        api_key_name = "ELYSIA_API_KEY",
         model = "gpt-5-codex",
       },
-      ["xmdbd-gemini-25"] = {
+      ["elysia-grok-4"] = {
         __inherited_from = "openai", -- https://platform.iflow.cn/models
-        endpoint = "https://xmdbd.online/v1",
-        api_key_name = "XMDBD_API_KEY",
-        model = "gemini-2.5-pro-maxthinking",
+        endpoint = "https://elysia.h-e.top/v1",
+        api_key_name = "ELYSIA_API_KEY",
+        model = "grok-4",
+      },
+      ["elysia-glm-4.6-advanced-search"] = {
+        __inherited_from = "openai", -- https://platform.iflow.cn/models
+        endpoint = "https://elysia.h-e.top/v1",
+        api_key_name = "ELYSIA_API_KEY",
+        model = "glm-4.6-advanced-search",
+      },
+      ["elysia-gemini-2.5-pro"] = {
+        __inherited_from = "openai", -- https://platform.iflow.cn/models
+        endpoint = "https://elysia.h-e.top/v1",
+        api_key_name = "ELYSIA_API_KEY",
+        model = "gemini-2.5-pro",
+      },
+      ["elysia-claude-sonnet-4-5-20250929"] = {
+        __inherited_from = "openai", -- https://platform.iflow.cn/models
+        endpoint = "https://elysia.h-e.top/v1",
+        api_key_name = "ELYSIA_API_KEY",
+        model = "claude-sonnet-4-5-20250929",
       },
     },
     acp_providers = {
@@ -294,7 +265,7 @@ return {
     ---@alias Mode "agentic" | "legacy"
     mode = "agentic",
     -- cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
-    provider = "iflow-cli", -- Recommend using Claude
+    provider = "B4U", -- Recommend using Claude
     auto_suggestions_provider = "gemini", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- disabled_tools = { "git_diff", "git_commit" },
     -- disabled_tools = { "replace_in_file"},
@@ -520,12 +491,41 @@ return {
     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
     {
       "zbirenbaum/copilot.lua",
+      event = "InsertEnter",
+      cmd = "Copilot",
+      requires = {
+        "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
+      },
       opts = {
-        suggestion = { enabled = true },
+        nes = {
+          enabled = false, -- requires copilot-lsp as a dependency
+          auto_trigger = false,
+          keymap = {
+            accept_and_goto = "<M-n>",
+            accept = "<M-N>",
+            dismiss = "<M-b>",
+          },
+        },
+        suggestion = {
+          enabled = false,
+          auto_trigger = true,
+          hide_during_completion = false,
+          debounce = 75,
+          trigger_on_accept = true,
+          keymap = {
+            accept = "<M-m>",
+            accept_word = false,
+            accept_line = false,
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "<C-]>",
+          },
+        },
         panel = { enabled = false },
         filetypes = {
           markdown = true,
           help = true,
+          Avante = true,
         },
         copilot_node_command = (vim.fn.has "wsl" == 1 and vim.fn.hostname() == "OpenValley-LWT")
             and (vim.fn.expand "$HOME" .. "/.nvm/versions/node/v23.0.0/bin/node")
