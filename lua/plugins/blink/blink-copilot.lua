@@ -54,11 +54,8 @@ return {
                   require("copilot-lsp.nes").apply_pending_nes()
                   and require("copilot-lsp.nes").walk_cursor_end_edit()
                 )
-              end
-              if cmp.snippet_active() then
-                return cmp.accept()
               else
-                return cmp.select_and_accept()
+                return cmp.select_next()
               end
             end,
             "snippet_forward",
