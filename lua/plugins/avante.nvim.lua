@@ -243,6 +243,18 @@ return {
         api_key_name = "ELYSIA_API_KEY",
         model = "claude-sonnet-4-5-20250929",
       },
+      ["twothree"] = {
+        __inherited_from = "openai",
+        endpoint = "https://sdwfger.edu.kg/v1",
+        api_key_name = "API_KEY_23",
+        model = "gpt-5-codex",
+      },
+      ["52996"] = { -- T1199756
+        __inherited_from = "openai",
+        endpoint = "https://529961.com/v1",
+        api_key_name = "API_KEY_52996",
+        model = "gpt-5-codex",
+      }
     },
     acp_providers = {
       ["gemini-cli"] = {
@@ -278,11 +290,16 @@ return {
         args = {},
         env = {},
       },
+      ["opencode"] = {
+        command = "opencode",
+        args = { "acp" },
+        env = {},
+      },
     },
     ---@alias Mode "agentic" | "legacy"
     mode = "agentic",
     -- cursor_applying_provider = "groq", -- 遍历文件插入，需要响应速度快的 provider
-    provider = "codex", -- Recommend using Claude
+    provider = "opencode", -- Recommend using Claude
     auto_suggestions_provider = "gemini", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- disabled_tools = { "git_diff", "git_commit" },
     -- disabled_tools = { "replace_in_file"},
@@ -306,7 +323,7 @@ return {
       support_paste_from_clipboard = true,
       -- enable_cursor_planning_mode = false,
       -- enable_claude_text_editor_tool_mode = false,
-      enable_fastapply = false,
+      enable_fastapply = true,
     },
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
