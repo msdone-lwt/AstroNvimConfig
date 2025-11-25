@@ -159,41 +159,23 @@ return {
         api_key_name = "MODELSCOPE_API_KEY",
         model = "ZhipuAI/GLM-4.6",
       },
-      ["targon-qwen3-coder-480B"] = {
-        __inherited_from = "openai",
-        endpoint = "https://api.targon.com/v1",
-        api_key_name = "TARGON_API_KEY",
-        model = "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
-      },
-      ["targon-glm-4.5"] = {
-        __inherited_from = "openai",
-        endpoint = "https://api.targon.com/v1",
-        api_key_name = "TARGON_API_KEY",
-        model = "zai-org/GLM-4.5",
-      },
       ["nyxar-claude-4"] = {
         __inherited_from = "openai",
         endpoint = "https://api.nyxar.org/v1",
         api_key_name = "NYXAR_API_KEY",
-        model = "claude-4.0-sonnet-think-search",
+        model = "claude-sonnet-4-5-20250929",
       },
-      ["nyxar-gemini-25"] = {
+      ["nyxar-glm"] = {
         __inherited_from = "openai",
         endpoint = "https://api.nyxar.org/v1",
         api_key_name = "NYXAR_API_KEY",
-        model = "gemini-2.5-pro",
+        model = "glm-4.6",
       },
       ["nyxar-gpt-5"] = {
         __inherited_from = "openai",
         endpoint = "https://api.nyxar.org/v1",
         api_key_name = "NYXAR_API_KEY",
         model = "gpt-5",
-      },
-      ["B4U"] = {
-        __inherited_from = "openai",
-        endpoint = "https://b4u.qzz.io/v1",
-        api_key_name = "B4U_API_KEY",
-        model = "claude-4.5-sonnet",
       },
       ["iflow-kimi-k2-instruct"] = {
         __inherited_from = "openai", -- https://platform.iflow.cn/models
@@ -213,48 +195,6 @@ return {
         api_key_name = "IFLOW_API_KEY",
         model = "qwen3-coder",
       },
-      ["elysia-gpt-5-codex"] = {
-        __inherited_from = "openai", -- https://platform.iflow.cn/models
-        endpoint = "https://elysia.h-e.top/v1",
-        api_key_name = "ELYSIA_API_KEY",
-        model = "gpt-5-codex",
-      },
-      ["elysia-grok-4"] = {
-        __inherited_from = "openai", -- https://platform.iflow.cn/models
-        endpoint = "https://elysia.h-e.top/v1",
-        api_key_name = "ELYSIA_API_KEY",
-        model = "grok-4",
-      },
-      ["elysia-glm-4.6-advanced-search"] = {
-        __inherited_from = "openai", -- https://platform.iflow.cn/models
-        endpoint = "https://elysia.h-e.top/v1",
-        api_key_name = "ELYSIA_API_KEY",
-        model = "glm-4.6-advanced-search",
-      },
-      ["elysia-gemini-2.5-pro"] = {
-        __inherited_from = "openai", -- https://platform.iflow.cn/models
-        endpoint = "https://elysia.h-e.top/v1",
-        api_key_name = "ELYSIA_API_KEY",
-        model = "gemini-2.5-pro",
-      },
-      ["elysia-claude-sonnet-4-5-20250929"] = {
-        __inherited_from = "openai", -- https://platform.iflow.cn/models
-        endpoint = "https://elysia.h-e.top/v1",
-        api_key_name = "ELYSIA_API_KEY",
-        model = "claude-sonnet-4-5-20250929",
-      },
-      ["twothree"] = {
-        __inherited_from = "openai",
-        endpoint = "https://sdwfger.edu.kg/v1",
-        api_key_name = "API_KEY_23",
-        model = "gpt-5-codex",
-      },
-      ["52996"] = { -- T1199756
-        __inherited_from = "openai",
-        endpoint = "https://529961.com/v1",
-        api_key_name = "API_KEY_52996",
-        model = "gpt-5-codex",
-      }
     },
     acp_providers = {
       ["gemini-cli"] = {
@@ -323,7 +263,7 @@ return {
       support_paste_from_clipboard = true,
       -- enable_cursor_planning_mode = false,
       -- enable_claude_text_editor_tool_mode = false,
-      enable_fastapply = true,
+      enable_fastapply = false,
     },
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
